@@ -1,0 +1,29 @@
+{
+    "name": "mateokurti/sistem-postar",
+    "type": "project",
+    "require": {
+        "vlucas/phpdotenv": "^5.5"
+    },
+    "authors": [
+        {
+            "name": "Mateo Kurti",
+            "email": "contact@mateokurti.com"
+        },
+        {
+            "name": "Klea Halili",
+            "email": "klea.halili@fshnstudent.info"
+        },
+        {
+            "name": "Igli Koxha",
+            "email": "igli.koxha@fshnstudent.info"
+        },
+        {
+            "name": "Klea Brahimi",
+            "email": "klea.brahimi@fshnstudent.info"
+        },
+        {
+            "name": "Kejdi Hajderasi",
+            "email": "kejdi.hajderasi@fshnstudent.info"
+        }
+    ]
+}
