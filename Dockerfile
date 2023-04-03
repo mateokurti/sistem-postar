@@ -22,7 +22,7 @@ COPY . /var/www/html
 COPY ./vhost.conf /etc/apache2/sites-available/000-default.conf
 
 # Install application dependencies
-RUN composer install --no-interaction --no-plugins --no-scripts
+RUN composer install -no-plugins --no-scripts
 
 # # Enable the rewrite module
 RUN a2enmod rewrite
