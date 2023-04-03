@@ -15,9 +15,8 @@
 
 <div class="flex items-center justify-center h-screen relative z-10">
     <div class="py-6 w-full">
-    <div class="flex bg-white rounded-lg shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl">
+        <div class="flex bg-white rounded-lg shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl">
             <div class="hidden lg:block lg:w-1/2 bg-cover" style="background-image:url('/assets/img/courier.jpg')"></div>
-            <!-- <div class="w-full p-8 lg:w-1/2"> -->
             <form class="w-full p-8 lg:w-1/2" action="/sign-in" method="POST">
                 <p class="text-xl text-gray-600 text-center">Welcome back!</p>
                 <a href="#" class="flex items-center justify-center mt-4 text-white rounded-lg shadow-md hover:bg-gray-100">
@@ -48,7 +47,7 @@
                     <input class="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none" type="password" name="password" placeholder="••••••••••">
                 </div>
                 <div class="mt-8">
-                    <button type="submit" class="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600">Login</button>
+                    <button type="submit" class="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600">Sign In</button>
                 </div>
                 <div class="mt-4 flex items-center justify-between">
                     <span class="border-b w-1/5 md:w-1/4"></span>
@@ -56,7 +55,6 @@
                     <span class="border-b w-1/5 md:w-1/4"></span>
                 </div>
             </form>
-            <!-- </div> -->
         </div>
     </div>
 </div>
