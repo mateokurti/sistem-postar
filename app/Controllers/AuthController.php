@@ -15,9 +15,20 @@ class AuthController extends _BaseController
         $this->identity = new Identity($pdo);
     }
 
-    public function showLoginForm()
+    public function getAuthenticatedIdentity()
     {
-        $this->view('auth/sign_in');
+        if (isset($_SESSION['identity_id'])) {
+            return $this->identity->getById($_SESSION['identity_id']);
+        }
+
+        return null;
+    }
+
+    public function showSignInForm()
+    {
+        $this->view('auth/sign_in', [
+            'viewTitle' => 'Sign In'
+        ]);
     }
 
     public function signIn()
