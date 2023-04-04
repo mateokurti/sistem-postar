@@ -3,16 +3,26 @@
 namespace App\Controllers;
 
 use PDO;
+use Google_Client;
+use Google_Service_Oauth2;
 use App\Models\Identity;
 
 class AuthController extends _BaseController
 {
     protected $identity;
+    protected $google_client;
 
     public function __construct(PDO $pdo)
     {
         parent::__construct($pdo);
         $this->identity = new Identity($pdo);
+        $this->google_client = new Google_Client();
+
+        $this->google_client->setClientId($_ENV['GOOGLE_CLIENT_ID']);
+        $this->google_client->setClientSecret($_ENV['GOOGLE_CLIENT_SECRET']);
+        $this->google_client->setRedirectUri($_ENV['GOOGLE_REDIRECT_URI']);
+        $this->google_client->addScope("email");
+        $this->google_client->addScope("profile");
     }
 
     public function getAuthenticatedIdentity()
@@ -29,6 +39,48 @@ class AuthController extends _BaseController
         $this->view('auth/sign_in', [
             'viewTitle' => 'Sign In'
         ]);
+        $this->view('auth/sign_in', ['googleAuthUrl' => $this->google_client->createAuthUrl()]);
+    }
+
+    public function googleSignIn()
+    {
+        $code = $_GET['code'];
+        if (empty($code)) {
+            $this->redirect('/sign-in');
+        }
+
+        // authenticate code from Google OAuth Flow 
+        $token = $this->google_client->fetchAccessTokenWithAuthCode($_GET['code']);
+        $this->google_client->setAccessToken($token['access_token']);
+
+        // get profile info 
+        $google_oauth = new Google_Service_Oauth2($this->google_client);
+        $google_account_info = $google_oauth->userinfo->get();
+        $email = $google_account_info->email;
+        $first_name = $google_account_info->given_name;
+        $last_name = $google_account_info->family_name;
+
+
+        $identity = $this->identity->getByEmail($email);
+
+        if ($identity) {
+            $_SESSION['identity_id'] = $identity['id'];
+
+            $this->redirect('/dashboard');
+        }
+
+        $hashedPassword = password_hash(bin2hex(random_bytes(20)), PASSWORD_DEFAULT);
+
+        $identity = $this->identity->create([
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'email' => $email,
+            'password' => $hashedPassword
+        ]);
+
+        $_SESSION['identity_id'] = $identity['id'];
+
+        $this->redirect('/dashboard');
     }
 
     public function signIn()

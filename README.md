@@ -30,3 +30,17 @@ Për të hapur faqen e projektit ju mund të hapni browserin dhe të shkruani ad
 ```
 http://localhost:8000
 ```
+
+## Tailwind
+
+Instalo tailwind:
+
+```
+npm install
+```
+
+Aktivizo komanden per te pare per ndryshimet ne css:
+```
+npx tailwindcss -i public/assets/css/input.css -o public/assets/css/output.css --watch
+```
+

@@ -35,7 +35,8 @@ class _BaseController
 
     protected function redirect($url)
     {
-        header("Location: $url");
+        $sanitized_url = filter_var($url, FILTER_SANITIZE_URL);
+        header("Location: $sanitized_url");
         exit;
     }
 }

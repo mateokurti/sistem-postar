@@ -9,3 +9,5 @@ $router->post('sign-up', 'AuthController@signUp', [GuestMiddleware::class]);
 $router->get('sign-out', 'AuthController@signOut', [AuthMiddleware::class]);
 
 $router->get('dashboard', 'DashboardController@index', [AuthMiddleware::class]);
+
+$router->get('oauth/google', 'AuthController@googleSignIn'. [GuestMiddleware::class]);
