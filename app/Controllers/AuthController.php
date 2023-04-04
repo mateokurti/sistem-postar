@@ -36,9 +36,6 @@ class AuthController extends _BaseController
 
     public function showSignInForm()
     {
-        $this->view('auth/sign_in', [
-            'viewTitle' => 'Sign In'
-        ]);
         $this->view('auth/sign_in', ['googleAuthUrl' => $this->google_client->createAuthUrl()]);
     }
 
