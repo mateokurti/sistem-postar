@@ -25,8 +25,20 @@ class AuthController extends _BaseController
         $this->google_client->addScope("profile");
     }
 
-    public function showLoginForm()
+    public function getAuthenticatedIdentity()
     {
+        if (isset($_SESSION['identity_id'])) {
+            return $this->identity->getById($_SESSION['identity_id']);
+        }
+
+        return null;
+    }
+
+    public function showSignInForm()
+    {
+        $this->view('auth/sign_in', [
+            'viewTitle' => 'Sign In'
+        ]);
         $this->view('auth/sign_in', ['googleAuthUrl' => $this->google_client->createAuthUrl()]);
     }
 

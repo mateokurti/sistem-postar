@@ -13,6 +13,7 @@ class _BaseController
 
     protected function view($template, $data = [])
     {
+        $data['viewTitle'] = $data['viewTitle'] ?? 'Sistemi Postar';
         $path = __DIR__ . '/../Views/' . $template . '.php';
         if (!file_exists($path)) {
             throw new \InvalidArgumentException("Template {$template} not found");
