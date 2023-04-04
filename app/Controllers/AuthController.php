@@ -105,11 +105,12 @@ class AuthController extends _BaseController
 
     public function signUp()
     {
-        $name = $_POST['name'];
+        $first_name = $_POST['first_name'];
+        $last_name = $_POST['last_name'];
         $email = $_POST['email'];
         $password = $_POST['password'];
 
-        if (empty($name) || empty($email) || empty($password)) {
+        if (empty($first_name) || empty($last_name) || empty($email) || empty($password)) {
             $this->flash('error', 'Please enter your name, email, and password.');
             $this->redirect('/');
         }
@@ -124,7 +125,8 @@ class AuthController extends _BaseController
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         $identity = $this->identity->create([
-            'name' => $name,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
             'email' => $email,
             'password' => $hashedPassword
         ]);
