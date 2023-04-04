@@ -1,11 +1,5 @@
 <?php include __DIR__ . '/../common/head.php'; ?>
 
-<?php if (isset($_SESSION['flash']['error'])): ?>
-        <div style="color: red;">
-            <?= $_SESSION['flash']['error']; ?>
-        </div>
-<?php endif; ?>
-
 <div class="fixed top-0 left-0 w-full h-full overflow-hidden z-0">
   <video autoplay muted loop class="w-full h-full object-cover">
     <source src="/assets/video/background.mp4" type="video/mp4">
@@ -46,6 +40,11 @@
                     </div>
                     <input class="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none" type="password" name="password" placeholder="••••••••••">
                 </div>
+                <?php if (isset($_SESSION['flash']['error'])): ?>
+                <div class="mt-4">
+                    <p class="text-red-500 text-xs italic" id="form-warning"><?= $_SESSION['flash']['error']; ?></p>
+                </div>
+                <?php endif; ?>
                 <div class="mt-8">
                 <button type="submit" class="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600">Sign In</button>
                 </div>
