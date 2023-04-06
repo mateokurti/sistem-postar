@@ -1,8 +1,10 @@
 {
     "name": "mateokurti/sistem-postar",
     "type": "project",
-    "require": {
-        "vlucas/phpdotenv": "^5.5"
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
     },
     "authors": [
         {
@@ -25,5 +27,9 @@
             "name": "Kejdi Hajderasi",
             "email": "kejdi.hajderasi@fshnstudent.info"
         }
-    ]
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.5",
+        "google/apiclient": "^2.0"
+    }
 }
