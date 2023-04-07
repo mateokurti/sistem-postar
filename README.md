@@ -20,7 +20,11 @@ Mënyra më e thjeshtë për të instaluar projektin është duke përdorur Dock
 
 Pasi të keni instaluar Docker dhe Docker Compose, ju mund të hapni terminalin në folderin ku keni shkarkuar projektin dhe të ekzekutoni komandën:
 ```
-docker compose up -d
+docker compose up
+```
+ose
+```
+make all
 ```
 
 ## Përdorimi
@@ -29,18 +33,5 @@ docker compose up -d
 Për të hapur faqen e projektit ju mund të hapni browserin dhe të shkruani adresën:
 ```
 http://localhost:8000
-```
-
-## Tailwind
-
-Instalo tailwind:
-
-```
-npm install
-```
-
-Aktivizo komanden per te pare per ndryshimet ne css:
-```
-npx tailwindcss -i public/assets/css/input.css -o public/assets/css/output.css --watch
 ```
 
