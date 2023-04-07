@@ -20,7 +20,7 @@ Mënyra më e thjeshtë për të instaluar projektin është duke përdorur Dock
 
 Pasi të keni instaluar Docker dhe Docker Compose, ju mund të hapni terminalin në folderin ku keni shkarkuar projektin dhe të ekzekutoni komandën:
 ```
-docker compose up
+docker compose up --build
 ```
 ose
 ```
