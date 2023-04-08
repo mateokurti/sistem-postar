@@ -27,7 +27,7 @@
                 <form id="sign-in-form" action="/sign-in" method="POST">
                     <div class="mt-4 flex items-center justify-between">
                         <span class="border-b w-1/5 lg:w-1/4"></span>
-                        <a href="#" class="text-xs text-center text-gray-500 uppercase">or login with email</a>
+                        <p class="text-xs text-center text-gray-500 uppercase">or login with email</p>
                         <span class="border-b w-1/5 lg:w-1/4"></span>
                     </div>
                     <div class="mt-4">
@@ -45,7 +45,7 @@
                     <div class="mt-4">
                         <p class="text-red-500 text-xs italic" id="form-warning"><?= $_SESSION['flash']['error']; ?></p>
                     </div>
-                    <?php endif; ?>
+                    <?php unset($_SESSION['flash']['error']); endif; ?>
                     <div class="mt-8">
                     <button type="submit" class="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600">Sign In</button>
                     </div>
@@ -58,7 +58,7 @@
                 <form id="sign-up-form" class="hidden" action="/sign-up" method="POST">
                     <div class="mt-4 flex items-center justify-between">
                         <span class="border-b w-1/5 lg:w-1/4"></span>
-                        <a href="#" class="text-xs text-center text-gray-500 uppercase">or sign up with email</a>
+                        <p class="text-xs text-center text-gray-500 uppercase">or sign up with email</p>
                         <span class="border-b w-1/5 lg:w-1/4"></span>
                     </div>
                     <div class="mt-4">
