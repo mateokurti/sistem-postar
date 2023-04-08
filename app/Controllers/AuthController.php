@@ -43,7 +43,7 @@ class AuthController extends _BaseController
     {
         $code = $_GET['code'];
         if (empty($code)) {
-            $this->redirect('/sign-in');
+            $this->redirect('/signin');
         }
 
         // authenticate code from Google OAuth Flow 
@@ -87,7 +87,7 @@ class AuthController extends _BaseController
 
         if (empty($email) || empty($password)) {
             $this->flash('error', 'Please enter your email and password.');
-            $this->redirect('/sign-in');
+            $this->redirect('/signin');
         }
 
         // Check if the identity exists in the database
@@ -95,7 +95,7 @@ class AuthController extends _BaseController
 
         if (!$identity || !password_verify($password, $identity['password'])) {
             $this->flash('error', 'Incorrect email or password.');
-            $this->redirect('/sign-in');
+            $this->redirect('/signin');
         }
 
         $_SESSION['identity_id'] = $identity['id'];
@@ -119,7 +119,7 @@ class AuthController extends _BaseController
 
         if ($identity) {
             $this->flash('error', 'This email is already in use.');
-            $this->redirect('/sign-up');
+            $this->redirect('/signup');
         }
 
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -140,6 +140,6 @@ class AuthController extends _BaseController
     {
         unset($_SESSION['identity_id']);
 
-        $this->redirect('/sign-in');
+        $this->redirect('/signin');
     }
 }

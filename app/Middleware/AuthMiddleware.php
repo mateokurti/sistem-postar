@@ -17,7 +17,7 @@ class AuthMiddleware
     {
         if (!$this->auth->getAuthenticatedIdentity()) {
             // Redirect to login page if user is not logged in
-            header('Location: /sign-in');
+            header('Location: /signin');
             exit;
         }
     }

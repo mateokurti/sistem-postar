@@ -24,7 +24,7 @@
                     </div>
                     <h1 class="px-4 py-3 w-5/6 text-center text-gray-600 font-bold">Continue with Google</h1>
                 </a>
-                <form id="sign-in-form" action="/sign-in" method="POST">
+                <form id="signin-form" action="/signin" method="POST">
                     <div class="mt-4 flex items-center justify-between">
                         <span class="border-b w-1/5 lg:w-1/4"></span>
                         <p class="text-xs text-center text-gray-500 uppercase">or login with email</p>
@@ -51,11 +51,11 @@
                     </div>
                     <div class="mt-4 flex items-center justify-between">
                         <span class="border-b w-1/5 md:w-1/4"></span>
-                        <a id="show-sign-up" href="#" class="text-xs text-gray-500 uppercase">or sign up</a>
+                        <a id="show-signup" href="#" class="text-xs text-gray-500 uppercase">or sign up</a>
                         <span class="border-b w-1/5 md:w-1/4"></span>
                     </div>
                 </form>
-                <form id="sign-up-form" class="hidden" action="/sign-up" method="POST">
+                <form id="signup-form" class="hidden" action="/signup" method="POST">
                     <div class="mt-4 flex items-center justify-between">
                         <span class="border-b w-1/5 lg:w-1/4"></span>
                         <p class="text-xs text-center text-gray-500 uppercase">or sign up with email</p>
@@ -91,7 +91,7 @@
                     </div>
                     <div class="mt-4 flex items-center justify-between">
                         <span class="border-b w-1/5 md:w-1/4"></span>
-                        <a id="show-sign-in" href="#" class="text-xs text-gray-500 uppercase">or sign in</a>
+                        <a id="show-signin" href="#" class="text-xs text-gray-500 uppercase">or sign in</a>
                         <span class="border-b w-1/5 md:w-1/4"></span>
                     </div>
                 </form>
@@ -101,16 +101,16 @@
 </div>
 
 <script>
-    document.getElementById('show-sign-in').addEventListener('click', function(e) {
+    document.getElementById('show-signin').addEventListener('click', function(e) {
         e.preventDefault();
-        document.getElementById('sign-up-form').classList.add('hidden');
-        document.getElementById('sign-in-form').classList.remove('hidden');
+        document.getElementById('signup-form').classList.add('hidden');
+        document.getElementById('signin-form').classList.remove('hidden');
     });
 
-    document.getElementById('show-sign-up').addEventListener('click', function(e) {
+    document.getElementById('show-signup').addEventListener('click', function(e) {
         e.preventDefault();
-        document.getElementById('sign-in-form').classList.add('hidden');
-        document.getElementById('sign-up-form').classList.remove('hidden');
+        document.getElementById('signin-form').classList.add('hidden');
+        document.getElementById('signup-form').classList.remove('hidden');
     });
 </script>
 
