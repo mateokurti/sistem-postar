@@ -12,6 +12,8 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: password
       MYSQL_DATABASE: database
+    command: >
+      sh -c "composer install --no-plugins --no-scripts && npx tailwindcss -i /var/www/html/public/assets/css/input.css -o /var/www/html/public/assets/css/output.css --watch=always & apache2-foreground"
     depends_on:
       - db
   db:
@@ -25,5 +27,6 @@ services:
       - "3306:3306"
     volumes:
       - db-data:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d
 volumes:
   db-data:
