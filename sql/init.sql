@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS identities (
   id INT AUTO_INCREMENT PRIMARY KEY,
   first_name VARCHAR(50),
   last_name VARCHAR(50),
@@ -6,4 +6,3 @@ CREATE TABLE IF NOT EXISTS users (
   password VARCHAR(100),
   phone VARCHAR(15)
 );
-
