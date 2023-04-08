@@ -24,7 +24,7 @@
                     </div>
                     <h1 class="px-4 py-3 w-5/6 text-center text-gray-600 font-bold">Continue with Google</h1>
                 </a>
-                <form id="signin-form" action="/signin" method="POST">
+                <form id="login-form" action="/login" method="POST">
                     <div class="mt-4 flex items-center justify-between">
                         <span class="border-b w-1/5 lg:w-1/4"></span>
                         <p class="text-xs text-center text-gray-500 uppercase">or login with email</p>
@@ -47,7 +47,7 @@
                     </div>
                     <?php unset($_SESSION['flash']['error']); endif; ?>
                     <div class="mt-8">
-                    <button type="submit" class="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600">Sign In</button>
+                    <button type="submit" class="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600">Log In</button>
                     </div>
                     <div class="mt-4 flex items-center justify-between">
                         <span class="border-b w-1/5 md:w-1/4"></span>
@@ -91,7 +91,7 @@
                     </div>
                     <div class="mt-4 flex items-center justify-between">
                         <span class="border-b w-1/5 md:w-1/4"></span>
-                        <a id="show-signin" href="#" class="text-xs text-gray-500 uppercase">or sign in</a>
+                        <a id="show-login" href="#" class="text-xs text-gray-500 uppercase">or sign in</a>
                         <span class="border-b w-1/5 md:w-1/4"></span>
                     </div>
                 </form>
@@ -101,15 +101,15 @@
 </div>
 
 <script>
-    document.getElementById('show-signin').addEventListener('click', function(e) {
+    document.getElementById('show-login').addEventListener('click', function(e) {
         e.preventDefault();
         document.getElementById('signup-form').classList.add('hidden');
-        document.getElementById('signin-form').classList.remove('hidden');
+        document.getElementById('login-form').classList.remove('hidden');
     });
 
     document.getElementById('show-signup').addEventListener('click', function(e) {
         e.preventDefault();
-        document.getElementById('signin-form').classList.add('hidden');
+        document.getElementById('login-form').classList.add('hidden');
         document.getElementById('signup-form').classList.remove('hidden');
     });
 </script>
