@@ -12,7 +12,7 @@
         <div class="flex bg-white rounded-lg shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl">
             <div class="hidden lg:block lg:w-1/2 bg-cover" style="background-image:url('/assets/img/courier.jpg')"></div>
             <div class="w-full p-8 lg:w-1/2">
-                <p class="text-xl text-gray-600 text-center">Welcome back! <?= $_SERVER['REQUEST_URI']; ?></p>
+                <p class="text-xl text-gray-600 text-center">Welcome back!</p>
                 <a href="<?php echo $googleAuthUrl; ?>" class="flex items-center justify-center mt-4 text-white rounded-lg shadow-md hover:bg-gray-100">
                     <div class="px-4 py-3">
                         <svg class="h-6 w-6" viewBox="0 0 40 40">
