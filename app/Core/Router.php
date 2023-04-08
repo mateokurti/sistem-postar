@@ -57,6 +57,10 @@ class Router
 
     protected function callAction($handler)
     {
+        if (is_callable($handler)) {
+            return $handler();
+        }
+
         [$controller, $action] = explode('@', $handler);
 
         $controller = "App\\Controllers\\{$controller}";

@@ -36,7 +36,7 @@ class AuthController extends _BaseController
 
     public function showLogInForm()
     {
-        $this->view('auth/sign_in', ['googleAuthUrl' => $this->google_client->createAuthUrl()]);
+        $this->view('auth/index', ['googleAuthUrl' => $this->google_client->createAuthUrl()]);
     }
 
     public function googleLogIn()
@@ -112,14 +112,29 @@ class AuthController extends _BaseController
 
         if (empty($first_name) || empty($last_name) || empty($email) || empty($password)) {
             $this->flash('error', 'Please enter your name, email, and password.');
-            $this->redirect('/');
+            $this->redirect('/auth/signup');
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->flash('error', 'Please enter a valid email.');
+            $this->redirect('/auth/signup');
         }
 
         $identity = $this->identity->getByEmail($email);
 
         if ($identity) {
             $this->flash('error', 'This email is already in use.');
-            $this->redirect('/signup');
+            $this->redirect('/auth/signup');
+        }
+
+        if (!preg_match('/^[a-zA-Z]+$/', $first_name) || !preg_match('/^[a-zA-Z]+$/', $last_name)) {
+            $this->flash('error', 'Please enter a valid name.');
+            $this->redirect('/auth/signup');
+        }
+
+        if (strlen($password) < 8 || !preg_match('/[A-Z]/', $password) || !preg_match('/[a-z]/', $password) || !preg_match('/[0-9]/', $password)) {
+            $this->flash('error', 'The password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.');
+            $this->redirect('/auth/signup');
         }
 
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -136,10 +151,15 @@ class AuthController extends _BaseController
         $this->redirect('/dashboard');
     }
 
-    public function signOut()
+    public function logOut()
     {
         unset($_SESSION['identity_id']);
+        $this->redirect('/auth/login');
+    }
 
-        $this->redirect('/login');
+    public function resetPassword()
+    {
+        $this->flash('success', 'Please check the email address for instructions to reset your password.');
+        $this->redirect('/auth/reset-password');
     }
 }

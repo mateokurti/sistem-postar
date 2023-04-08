@@ -30,7 +30,10 @@ class _BaseController
 
     protected function flash($type, $message)
     {
-        $_SESSION['flash'][$type] = $message;
+        $_SESSION['flash'][$type] = [
+            'message' => $message,
+            'form' => $_SERVER['REQUEST_URI']
+        ];
     }
 
     protected function redirect($url)
