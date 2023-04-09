@@ -37,3 +37,4 @@ $router->get('logout', function () {
 
 
 $router->get('dashboard', 'DashboardController@index', [AuthMiddleware::class]);
+$router->get('deliveries', 'DeliveryController@index', [AuthMiddleware::class]);
