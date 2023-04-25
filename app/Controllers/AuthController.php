@@ -6,6 +6,8 @@ use PDO;
 use Google_Client;
 use Google_Service_Oauth2;
 use App\Models\Identity;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 class AuthController extends _BaseController
 {
@@ -72,7 +74,8 @@ class AuthController extends _BaseController
             'first_name' => $first_name,
             'last_name' => $last_name,
             'email' => $email,
-            'password' => $hashedPassword
+            'password' => $hashedPassword,
+            'account_type' => 1
         ]);
 
         $_SESSION['identity_id'] = $identity['id'];
@@ -109,6 +112,7 @@ class AuthController extends _BaseController
         $last_name = $_POST['last_name'];
         $email = $_POST['email'];
         $password = $_POST['password'];
+        $account_type = $_POST['account_type'];
 
         if (empty($first_name) || empty($last_name) || empty($email) || empty($password)) {
             $this->flash('error', 'Please enter your name, email, and password.');
@@ -143,7 +147,8 @@ class AuthController extends _BaseController
             'first_name' => $first_name,
             'last_name' => $last_name,
             'email' => $email,
-            'password' => $hashedPassword
+            'password' => $hashedPassword,
+            'account_type' => $account_type,
         ]);
 
         $_SESSION['identity_id'] = $identity['id'];
@@ -159,7 +164,59 @@ class AuthController extends _BaseController
 
     public function resetPassword()
     {
+        $email = $_POST['email']; 
+
+        // $identity = $this->identity->getByEmail($email);
+
+        // if (!$identity) {
+        //     $this->flash('error', 'User with that email not found!');
+        //     $this->redirect('auth/reset-password');
+        // }
+        //
+        $code = $this->identity->createResetCode($email);
+
+        // Instantiation and passing `true` enables exceptions
+        $mail = new PHPMailer(true);
+
+        // Server settings
+        // Enable verbose debug output
+        $mail->SMTPDebug = 2; 
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'postafshnverify@gmail.com';
+        $mail->Password   = 'jzqn xlgz vuba gnup';
+        $mail->SMTPSecure = 'ssl';
+        $mail->Port       = 465;
+    
+        //Recipients
+        $mail->setFrom('postafshn@gmail.com', 'PostaFSHN');
+        $mail->addAddress($email);
+
+        // Content
+        $mail->isHTML(true); 
+        $mail->Subject  = 'Test Email';
+        $reset_link     = sprintf('http://localhost:8000/auth/reset-password/confirm?email=%s&code=%s', $email, $code);
+        $mail->Body     = "Reset Password: " . $reset_link; 
+
+        $mail->send();
+
         $this->flash('success', 'Please check the email address for instructions to reset your password.');
         $this->redirect('/auth/reset-password');
+    }
+
+    public function setNewPassword() {
+        $email      =   $_POST['email']; 
+        $code       =   $_POST['code'];
+        $password   =   $_POST['password'];
+
+        $valid_code = $this->identity->isValidResetCode($email, $code);
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        
+        if($valid_code){
+            $this->flash('success', 'Password reset successfully!');
+            $this->identity->setPassword($email, $hashedPassword);
+        }
+        $this->redirect('/auth/login');
     }
 }

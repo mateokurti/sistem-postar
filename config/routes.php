@@ -10,10 +10,12 @@ $router->get('', '', [AuthMiddleware::class, GuestMiddleware::class]);
 $router->get('auth/login', 'AuthController@showLogInForm', [GuestMiddleware::class]);
 $router->get('auth/signup', 'AuthController@showLogInForm', [GuestMiddleware::class]);
 $router->get('auth/reset-password', 'AuthController@showLogInForm', [GuestMiddleware::class]);
+$router->get('auth/reset-password/confirm', 'AuthController@showLogInForm', [GuestMiddleware::class]);
 
 $router->post('auth/login', 'AuthController@signIn', [GuestMiddleware::class]);
 $router->post('auth/signup', 'AuthController@signUp', [GuestMiddleware::class]);
 $router->post('auth/reset-password', 'AuthController@resetPassword', [GuestMiddleware::class]);
+$router->post('auth/reset-password/confirm', 'AuthController@setNewPassword', [GuestMiddleware::class]);
 $router->get('auth/logout', 'AuthController@logOut', [AuthMiddleware::class]);
 $router->get('oauth/google', 'AuthController@googleLogIn', [GuestMiddleware::class]);
 
@@ -38,3 +40,5 @@ $router->get('logout', function () {
 
 $router->get('dashboard', 'DashboardController@index', [AuthMiddleware::class]);
 $router->get('deliveries', 'DeliveryController@index', [AuthMiddleware::class]);
+$router->get('deliveries/create', 'DeliveryController@showCreateForm', [AuthMiddleware::class]);
+$router->post('deliveries/create', 'DeliveryController@create', [AuthMiddleware::class]);
