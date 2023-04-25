@@ -32,6 +32,7 @@
                 </div>
                 <?php include __DIR__ . '/components/login-form.php'; ?>
                 <?php include __DIR__ . '/components/reset-password-form.php'; ?>
+                <?php include __DIR__ . '/components/reset-password-confirm-form.php'; ?>
                 <?php include __DIR__ . '/components/signup-form.php'; ?>
                 <div class="mt-4 flex items-center justify-between">
                     <span class="border-b w-1/5 md:w-1/4"></span>
@@ -47,6 +48,7 @@
 <script>
 
     const showLoginForm = () => {
+        document.getElementById('reset-password-confirm-form').classList.add('hidden');
         document.getElementById('login-form').classList.remove('hidden');
         document.getElementById('signup-form').classList.add('hidden');
         document.getElementById('reset-password-form').classList.add('hidden');
@@ -58,6 +60,7 @@
     }
 
     const showSignupForm = () => {
+        document.getElementById('reset-password-confirm-form').classList.add('hidden');
         document.getElementById('signup-form').classList.remove('hidden');
         document.getElementById('login-form').classList.add('hidden');
         document.getElementById('reset-password-form').classList.add('hidden');
@@ -69,6 +72,7 @@
     }
 
     const showResetPasswordForm = () => {
+        document.getElementById('reset-password-confirm-form').classList.add('hidden');
         document.getElementById('reset-password-form').classList.remove('hidden');
         document.getElementById('login-form').classList.add('hidden');
         document.getElementById('signup-form').classList.add('hidden');
@@ -79,12 +83,25 @@
         window.history.pushState({}, '', '/auth/reset-password');
     }
 
+    const showResetPasswordConfirmForm = () => {
+        document.getElementById('reset-password-confirm-form').classList.remove('hidden');
+        document.getElementById('reset-password-form').classList.add('hidden');
+        document.getElementById('login-form').classList.add('hidden');
+        document.getElementById('signup-form').classList.add('hidden');
+
+        document.getElementById('show-login').classList.remove('hidden');
+        document.getElementById('show-signup').classList.add('hidden');
+    }
+
     switch (window.location.pathname) {
         case '/auth/login':
             showLoginForm();
             break;
         case '/auth/signup':
             showSignupForm();
+            break;
+        case '/auth/reset-password/confirm':
+            showResetPasswordConfirmForm();
             break;
         case '/auth/reset-password':
             showResetPasswordForm();
