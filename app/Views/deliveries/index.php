@@ -144,12 +144,11 @@
   const tableBody = document.querySelector('#table-deliveries-body');
 
   searchInput.addEventListener('input', () => {
-    console.log(searchInput.value.trim().toLowerCase());
     const searchQuery = searchInput.value.trim().toLowerCase();
     const rows = tableBody.querySelectorAll('tr');
 
     rows.forEach(row => {
-      const cells = row.querySelectorAll('td');
+      const cells = row.querySelectorAll('td, th');
       let foundMatch = false;
 
       cells.forEach(cell => {
