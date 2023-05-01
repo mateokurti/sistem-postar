@@ -44,13 +44,13 @@ class DeliveryController extends _BaseController
                 break;
             case 'courier':
                 $deliveries = $this->delivery->getByHolderId(
-                    $this->package_holder->getByIdentityId($identityId)['id']
+                    $this->package_holder->getByIdentityId($identityId)['id'], 'courier'
                 );
                 break;
             case 'employee':
                 $deliveries = $this->delivery->getByHolderId(
                     $this->package_holder->getByOfficeId(
-                        $this->employee->getByIdentityId($identityId)['office_id']
+                        $this->employee->getByIdentityId($identityId)['office_id'], 'office'
                     )['id']
                 );
                 break;
@@ -79,7 +79,7 @@ class DeliveryController extends _BaseController
             foreach ($delivery['tracking_history'] as &$tracking_history) {
                 $tracking_holder = $this->package_holder->getById($tracking_history['holder_id']);
                 
-                if ($tracking_history['holder'] and $tracking_history['holder']['type'] == 'office') {
+                if ($tracking_holder['type'] == 'office') {
                     $tracking_history['holder'] = $this->office->getById($tracking_holder['office_id']);
                 } else {
                     $tracking_history['holder'] = $this->identity->getById($tracking_holder['id']);
