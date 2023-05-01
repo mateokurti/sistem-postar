@@ -8,6 +8,7 @@ use App\Models\PackageHolder;
 use App\Models\Employee;
 use App\Models\Address;
 use App\Models\Office;
+use App\Models\TrackingHistory;
 use PDO;
 
 class DeliveryController extends _BaseController
@@ -18,6 +19,7 @@ class DeliveryController extends _BaseController
     private $employee;
     private $address;
     private $office;
+    private $tracking_history;
 
     public function __construct(PDO $pdo)
     {
@@ -28,6 +30,7 @@ class DeliveryController extends _BaseController
         $this->employee = new Employee($pdo);
         $this->address = new Address($pdo);
         $this->office = new Office($pdo);
+        $this->tracking_history = new TrackingHistory($pdo);
     }
 
     public function index()
@@ -71,6 +74,18 @@ class DeliveryController extends _BaseController
                 $delivery['holder'] = $this->identity->getById($holder['identity_id']);
             }
             $delivery['holder']['type'] = $holder['type'];
+            $delivery['tracking_history'] = $this->tracking_history->getByDeliveryId($delivery['id']);
+
+            foreach ($delivery['tracking_history'] as &$tracking_history) {
+                $tracking_holder = $this->package_holder->getById($tracking_history['holder_id']);
+                
+                if ($tracking_history['holder'] and $tracking_history['holder']['type'] == 'office') {
+                    $tracking_history['holder'] = $this->office->getById($tracking_holder['office_id']);
+                } else {
+                    $tracking_history['holder'] = $this->identity->getById($tracking_holder['id']);
+                }
+                $tracking_history['holder']['type'] = $tracking_holder['type'];  
+            }
         }
 
         // Render the deliveries view
@@ -121,6 +136,14 @@ class DeliveryController extends _BaseController
             'holder_id' => $identityId,
             'notes' => $data['notes'],
             'address_id' => $recipient_address['id'],
+        ]);
+
+        $this->tracking_history->create([
+            'delivery_id' => $data['id'],
+            'holder_id' => $identityId,
+            'description' => 'Dërgesa u krijua',
+            'status' => 'created',
+            'created_at' => date('Y-m-d H:i:s'),
         ]);
 
         $this->redirect('/deliveries');

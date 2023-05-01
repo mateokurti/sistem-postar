@@ -39,4 +39,11 @@ class _BaseModel
         $stmt->execute([$value]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function getAllBy($column, $value)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM {$this->table} WHERE {$column} = ?");
+        $stmt->execute([$value]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
