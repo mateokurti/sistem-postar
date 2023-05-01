@@ -16,6 +16,6 @@
                         </div>
                     <?php unset($_SESSION['flash']['error']); endif; ?>
                     <div class="mt-8">
-                    <button type="submit" class="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600">Log In</button>
+                        <button type="submit" class="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600">Log In</button>
                     </div>
                 </form>

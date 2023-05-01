@@ -1,12 +1,3 @@
-CREATE TABLE IF NOT EXISTS account_types (
-    id INT PRIMARY KEY,
-    name VARCHAR(255)
-);
-
-INSERT INTO account_types (id, name) VALUES (1, 'User');
-INSERT INTO account_types (id, name) VALUES (2, 'Courier');
-INSERT INTO account_types (id, name) VALUES (3, 'Post Office');
-
 CREATE TABLE IF NOT EXISTS identities (
     id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(255),
@@ -14,8 +5,7 @@ CREATE TABLE IF NOT EXISTS identities (
     email VARCHAR(255),
     password VARCHAR(255),
     phone VARCHAR(255),
-    account_type INT,
-    FOREIGN KEY (account_type) REFERENCES account_types(id)
+    identity_type enum('admin', 'user', 'courier', 'employee')
 );
 
 CREATE TABLE IF NOT EXISTS reset_codes (
@@ -26,15 +16,72 @@ CREATE TABLE IF NOT EXISTS reset_codes (
     expires_at TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS delieveries ( 
+CREATE TABLE IF NOT EXISTS addresses (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    recipient_name VARCHAR(255),
-    city VARCHAR(255),
-    address VARCHAR(255),
-    zip VARCHAR(255),
-    phone VARCHAR(255),
+    identity_id INT NOT NULL,
+    street VARCHAR(50) NOT NULL,
+    city VARCHAR(50) NOT NULL,
+    zip VARCHAR(10) NOT NULL,
+    FOREIGN KEY (identity_id) REFERENCES identities(id)
+);
+
+CREATE TABLE IF NOT EXISTS identities_addresses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    identity_id INT NOT NULL,
+    address_id INT NOT NULL,
+    FOREIGN KEY (identity_id) REFERENCES identities(id),
+    FOREIGN KEY (address_id) REFERENCES addresses(id)
+);
+
+CREATE TABLE IF NOT EXISTS offices (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    address_id INT NOT NULL,
+    phone VARCHAR(15),
+    FOREIGN KEY (address_id) REFERENCES addresses(id)
+);
+
+CREATE TABLE IF NOT EXISTS employees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    identity_id INT NOT NULL,
+    employee_type enum('courier', 'post_office'),
+    office_id INT,
+    FOREIGN KEY (identity_id) REFERENCES identities(id),
+    FOREIGN KEY (office_id) REFERENCES offices(id)
+);
+
+CREATE TABLE IF NOT EXISTS package_holders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    identity_id INT,
+    office_id INT,
+    type enum('user', 'courier', 'office'),
+    FOREIGN KEY (identity_id) REFERENCES identities(id),
+    FOREIGN KEY (office_id) REFERENCES offices(id),
+    CHECK (identity_id IS NOT NULL OR office_id IS NOT NULL),
+    CHECK (identity_id IS NULL OR office_id IS NULL)
+);
+
+CREATE TABLE IF NOT EXISTS deliveries (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sender_id INT NOT NULL,
+    recipient_id INT NOT NULL,
+    holder_id INT NOT NULL,
+    tracking_number VARCHAR(10),
     notes VARCHAR(255),
-    status VARCHAR(255),
-    responsible_identity INT,
-    FOREIGN KEY (responsible_identity) REFERENCES identities(id)
+    address_id INT NOT NULL,
+    FOREIGN KEY (address_id) REFERENCES addresses(id),
+    FOREIGN KEY (sender_id) REFERENCES identities(id),
+    FOREIGN KEY (recipient_id) REFERENCES identities(id),
+    FOREIGN KEY (holder_id) REFERENCES package_holders(id)
+);
+
+CREATE TABLE IF NOT EXISTS tracking_history (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    delivery_id INT NOT NULL,
+    holder_id int NOT NULL,
+    description VARCHAR(255),
+    status enum('created', 'picked_up', 'in_transit', 'in_post_office', 'delivered', 'returned', 'cancelled', 'lost'),
+    created_at TIMESTAMP default CURRENT_TIMESTAMP,
+    FOREIGN KEY (delivery_id) REFERENCES deliveries(id),
+    FOREIGN KEY (holder_id) REFERENCES package_holders(id)
 );

@@ -1,15 +1,15 @@
                 <form id="signup-form" class="hidden" action="/auth/signup" method="POST">
-                    <div class="mb-4">
-                      <label class="block text-gray-700 font-bold mb-2" for="account_type">
+                    <!-- <div class="mb-4">
+                      <label class="block text-gray-700 font-bold mb-2" for="identity_type">
                         Account Type
                       </label>
-                      <select class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="account_type" name="account_type" required>
+                      <select class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="identity_type" name="identity_type" required>
                         <option value="" disabled selected>Select an account type</option>
                         <option value=1>User</option>
                         <option value=2>Courier</option>
                         <option value=3>Post Office</option>
                       </select>
-                    </div>
+                    </div> -->
                    <div class="mt-4">
                         <div class="flex justify-between">
                             <div class="w-1/2 mr-1">

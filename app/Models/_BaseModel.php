@@ -14,6 +14,18 @@ class _BaseModel
         $this->pdo = $pdo;
     }
 
+    function sanitize($data) {
+        return strip_tags(htmlentities(trim($data)));
+    }
+
+    function sanitizeArray(&$array) {
+        foreach($array as $key => $value) {
+            // check if type string
+            if(is_string($value)) $array[$key] = $this->sanitize($value);
+        }
+        return $array;
+    }
+
     public function getById($id)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM {$this->table} WHERE id = ?");

@@ -75,7 +75,7 @@ class AuthController extends _BaseController
             'last_name' => $last_name,
             'email' => $email,
             'password' => $hashedPassword,
-            'account_type' => 1
+            'identity_type' => 'user'
         ]);
 
         $_SESSION['identity_id'] = $identity['id'];
@@ -112,7 +112,7 @@ class AuthController extends _BaseController
         $last_name = $_POST['last_name'];
         $email = $_POST['email'];
         $password = $_POST['password'];
-        $account_type = $_POST['account_type'];
+        $identity_type = $_POST['identity_type'];
 
         if (empty($first_name) || empty($last_name) || empty($email) || empty($password)) {
             $this->flash('error', 'Please enter your name, email, and password.');
@@ -148,7 +148,7 @@ class AuthController extends _BaseController
             'last_name' => $last_name,
             'email' => $email,
             'password' => $hashedPassword,
-            'account_type' => $account_type,
+            'identity_type' => 'user',
         ]);
 
         $_SESSION['identity_id'] = $identity['id'];

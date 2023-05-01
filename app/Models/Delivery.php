@@ -15,22 +15,45 @@ class Delivery extends _BaseModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getByHolderId($holderId) {
+        $sql = "SELECT * FROM {$this->table} WHERE holder_id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$holderId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getByUser($identityId) {
+        $sql = "SELECT DISTINCT * FROM {$this->table} WHERE sender_id = :identityId or recipient_id = :identityId";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':identityId', $identityId);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function create($data)
     {
-        $sql = "INSERT INTO {$this->table} (recipient_name, city, address, zip, phone, notes, status, responsible_identity) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $data = $this->sanitizeArray($data);
+        $sql = "INSERT INTO {$this->table} (sender_id, recipient_id, holder_id, notes, address_id) VALUES (?, ?, ?, ?, ?)";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$data['recipient_name'], $data['city'], $data['address'], $data['zip'], $data['phone'], $data['notes'], $data['status'], $data['responsible_identity']]);
-        return $this->getById($this->pdo->lastInsertId());
+        $stmt->execute([
+            $data['sender_id'], $data['recipient_id'], $data['holder_id'], $data['notes'], $data['address_id']
+        ]);
+        $delivery = $this->getById($this->pdo->lastInsertId());
+        $tracking_number = str_pad($delivery['id'], 10, "0", STR_PAD_LEFT);
+        $this->pdo->prepare("UPDATE {$this->table} SET tracking_number = ? WHERE id = ?")->execute([$tracking_number, $delivery['id'],]);
+        return $this->getById($delivery['id']);
     }
-    
+
     public function update($data)
     {
-        $sql = "INSERT {$this->table} SET recipient_name = ?,  city = ?,  address = ?,  zip = ?,  phone = ?, notes = ?, status = ?, responsible_identity = ? WHERE id = ?";
+        $data = $this->sanitizeArray($data);
+        $sql = "INSERT {$this->table} SET recipient_id = ?,  notes = ?,  address_id = ? WHERE id = ?";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$data['recipient_name'], $data['city'], $data['address'], $data['zip'], $data['phone'], $data['notes'], $data['status'], $data['responsible_identity'], $data['id']]);
+        $stmt->execute([$data['recipient_name'], $data['notes'], $data['address_id']]);
     }
 
     public function delete($id) {
+        $id = $this->sanitize($id);
         $sql = "DELETE FROM {$this->table} WHERE id = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$id]);
