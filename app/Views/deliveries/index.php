@@ -2,81 +2,149 @@
 
 <?php include __DIR__ . '/../common/nav.php'; ?>
 
-<div class="p-4 sm:ml-64 mt-10">
+<div class="p-4 sm:ml-64 mt-10 bg-white dark:bg-gray-900 h-100">
 
-<button data-modal-target="create-delivery-modal" data-modal-toggle="create-delivery-modal" class="my-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full flex items-center">
-  <svg class="fill-current mr-2" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
-    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
-  </svg>
-  Krijo Dërgesë
-</button>
 
 <?php include __DIR__ . '/create.php'; ?>
 
-<div class="px-4 py-2 bg-gray-50 shadow-md rounded-lg">
-<div class="mb-4">
-  <label class="block text-gray-700 font-bold mb-2" for="search">
-    Kërko:
-  </label>
-  <input class="appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="search" type="text" placeholder="Search...">
-</div>
-  <table class="w-full table-auto">
-    <thead>
-      <tr class="border-b-2 border-gray-300">
-        <th class="text-left font-medium text-gray-600 uppercase px-4 py-2">Numri i Gjurmimit</th>
-        <th class="text-left font-medium text-gray-600 uppercase px-4 py-2">Recipient Name</th>
-        <th class="text-left font-medium text-gray-600 uppercase px-4 py-2">Adresa</th>
-        <th class="text-left font-medium text-gray-600 uppercase px-4 py-2">Qyteti</th>
-        <th class="text-left font-medium text-gray-600 uppercase px-4 py-2">Kodi Postar</th>
-        <th class="text-left font-medium text-gray-600 uppercase px-4 py-2">Status</th>
-        <th class="text-left font-medium text-gray-600 uppercase px-4 py-2">Mbajtësi i Pakos</th>
-        <th class="text-left font-medium text-gray-600 uppercase px-4 py-2"></th>
-      </tr>
-    </thead>
-    <tbody id="table-body">
-    <?php
-    function generateTrackingNumber() {
-      $randomString = bin2hex(random_bytes(5)); // generates a random string
-      $timestamp = time(); // gets the current timestamp
-      $trackingNumber = $randomString . "-" . $timestamp; // combines the random string and timestamp
-      return $trackingNumber;
-    }
-    
-    foreach ($deliveries as $row) {
-        echo '<tr class="border-b border-gray-300 hover:bg-gray-100">';
-        echo '<td class="text-gray-800 px-4 py-2">' . $row['tracking_number'] . '</td>';
-        echo '<td class="text-gray-800 px-4 py-2">' . $row['recipient']['first_name'] . ' ' .  $row['recipient']['last_name'] . '</td>';
-        echo '<td class="text-gray-800 px-4 py-2">' . $row['address']['street'] . '</td>';
-        echo '<td class="text-gray-800 px-4 py-2">' . $row['address']['city'] . '</td>';
-        echo '<td class="text-gray-800 px-4 py-2">' . $row['address']['zip'] . '</td>';
-        echo '<td>UNKNOWN</td>';
-        if ($row['holder']['type'] == 'user') {
-          echo '<td class="text-gray-800 px-4 py-2">' . $row['holder']['first_name'] . ' ' . $row['holder']['last_name'] . '</td>';
-        } else if ($row['holder']['type'] == 'courier') {
-          echo '<td class="text-gray-800 px-4 py-2">' . $row['holder']['first_name'] . ' ' . $row['holder']['last_name'] . '</td>';
-        } else if ($row['holder']['type'] == 'office') {
-          echo '<td class="text-gray-800 px-4 py-2">Zyra Postare ' .  $row['holder']['id'] .  '</td>';
-        }
-    ?>
-          <td class="border px-4 py-2">
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-              Ndrysho
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg my-4">
+    <div class="flex items-center justify-between pb-4 bg-white dark:bg-gray-900">
+        <div>
+            <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction" class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" type="button">
+                <span class="sr-only">Action button</span>
+                Veprime
+                <svg class="w-3 h-3 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
             </button>
-          </td>
-    <?php
-        echo '</tr>';
-    }
-    ?>
-    </tbody>
-  </table>
-</div>   
+            <div id="dropdownAction" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownActionButton">
+                    <li>
+                        <a data-modal-target="create-delivery-modal" data-modal-toggle="create-delivery-modal" href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Krijo Dërgesë</a>
+                    </li>
+                    <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Ndrysho Dërgesë</a>
+                    </li>
+                </ul>
+                <div class="py-1">
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Fshi Dërgesë</a>
+                </div>
+            </div>
+        </div>
+        <label for="table-search" class="sr-only">Kërko</label>
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
+            </div>
+            <input type="text" id="table-search-delivery" class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Kërko për dërgesë">
+        </div>
+    </div>
+    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="p-4">
+                    <div class="flex items-center">
+                        <input id="checkbox-all-search" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <label for="checkbox-all-search" class="sr-only">checkbox</label>
+                    </div>
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Numri i Gjurmimit
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Marrësi
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Adresa
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Statusi
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Vendodhja e Pakos
+                </th>
+                <th scope="col" class="px-6 py-3"></th>
+            </tr>
+        </thead>
+        <tbody id="table-deliveries-body">
+            <?php
+              foreach ($deliveries as $row) {
+            ?>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <td class="w-4 p-4">
+                    <div class="flex items-center">
+                        <input id="checkbox-table-search-1" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+                    </div>
+                </td>
+                <td class="px-6 py-4">
+                    <?= $row['tracking_number'] ?>
+                </td>
+                <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                    <div>
+                        <div class="text-base font-semibold"><?= $row['recipient']['first_name'] . ' ' .  $row['recipient']['last_name'] ?></div>
+                        <div class="font-normal text-gray-500"><?= $row['recipient']['email'] ?></div>
+                    </div>  
+                </th>
+                <td class="px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                    <div>
+                        <div class="text-base font-normal"><?= $row['address']['street'] ?></div>
+                        <div class="font-normal text-gray-500"><?= $row['address']['city'] . ' ' . $row['address']['zip'] ?></div>
+                    </div>  
+                </td>
+                
+                <td class="px-6 py-4">
+                    <div class="flex items-center">
+                        <div class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div> S'ka Informacion
+                    </div>
+                </td>
+                <?php
+                $holder_title = "S'ka informacion";
+                $holder_subtitle = "";
+                if ($row['holder']['type'] == 'user') {
+                  $holder_title = $row['holder']['first_name'] . ' ' . $row['holder']['last_name'];
+                  if ($row['holder']['id'] == $identity['id']) {
+                    $holder_subtitle = 'Pakon e ke ende ti';
+                  } else if ($row['holder']['id'] == $row['sender']['id']) {
+                    $holder_subtitle = 'Pakon e ka ende dërguesi';
+                  } else if ($row['holder']['id'] == $row['recipient']['id']) {
+                    $holder_subtitle = 'Pakon e ka marrë marrësi';
+                  }
+                } else if ($row['holder']['type'] == 'courier') {
+                  $holder_title = $row['holder']['first_name'] . ' ' . $row['holder']['last_name'];
+                  $holder_subtitle = 'Pakon e ka korrieri';
+                } else if ($row['holder']['type'] == 'office') {
+                  $holder_title = $row['holder']['name'];
+                  $holder_subtitle = 'Pakoja në zyrë postare';
+                }
+                ?>
+                <td class="px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                    <div>
+                        <div class="text-base font-normal"><?= $holder_title ?></div>
+                        <div class="font-normal text-gray-500"><?= $holder_subtitle ?></div>
+                    </div>  
+                </td>
+                <td class="px-6 py-4">
+                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                      </svg>
+                    </a>
+                </td>
+            </tr>
+            <?php
+              }
+            ?>
+        </tbody>
+    </table>
 </div>
+
+
 
 <script>
-  const searchInput = document.querySelector('#search');
-  const tableBody = document.querySelector('#table-body');
+  const searchInput = document.querySelector('#table-search-delivery');
+  const tableBody = document.querySelector('#table-deliveries-body');
 
   searchInput.addEventListener('input', () => {
+    console.log(searchInput.value.trim().toLowerCase());
     const searchQuery = searchInput.value.trim().toLowerCase();
     const rows = tableBody.querySelectorAll('tr');
 
