@@ -94,7 +94,7 @@
                   
                   <td class="px-6 py-4">
                       <div class="flex items-center">
-                          <div class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div> S'ka Informacion
+                          <div class="h-2.5 w-2.5 rounded-full bg-<?= in_array($row['status'], ['returned', 'cancelled', 'lost']) ? 'red' : 'green' ?>-500 mr-2"></div> <?= $row['status'] ?>
                       </div>
                   </td>
                   <?php

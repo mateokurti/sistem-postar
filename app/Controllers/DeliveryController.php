@@ -86,6 +86,8 @@ class DeliveryController extends _BaseController
                 }
                 $tracking_history['holder']['type'] = $tracking_holder['type'];  
             }
+
+            $delivery['status'] = ucfirst($this->tracking_history->getLatestByDeliveryId($delivery['id'])['status']);
         }
 
         // Render the deliveries view

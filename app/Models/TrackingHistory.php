@@ -11,6 +11,13 @@ class TrackingHistory extends _BaseModel
     {
         return $this->getAllBy('delivery_id', $delivery_id);
     }
+
+    public function getLatestByDeliveryId($delivery_id)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM {$this->table} WHERE delivery_id = ? ORDER BY created_at DESC LIMIT 1");
+        $stmt->execute([$delivery_id]);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
     
     public function create($data) {
         $data = $this->sanitizeArray($data);
