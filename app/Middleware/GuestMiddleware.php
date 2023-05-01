@@ -17,7 +17,8 @@ class GuestMiddleware
     {
         if ($this->auth->getAuthenticatedIdentity()) {
             // Redirect to home page if user is logged in
-            header('Location: /dashboard');
+            // header('Location: /dashboard');
+            header('Location: /deliveries');
         }
     }
 }

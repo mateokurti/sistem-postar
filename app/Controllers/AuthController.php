@@ -65,7 +65,8 @@ class AuthController extends _BaseController
         if ($identity) {
             $_SESSION['identity_id'] = $identity['id'];
 
-            $this->redirect('/dashboard');
+            // $this->redirect('/dashboard');
+            $this->redirect('/deliveries');
         }
 
         $hashedPassword = password_hash(bin2hex(random_bytes(20)), PASSWORD_DEFAULT);
@@ -80,7 +81,8 @@ class AuthController extends _BaseController
 
         $_SESSION['identity_id'] = $identity['id'];
 
-        $this->redirect('/dashboard');
+        // $this->redirect('/dashboard');
+        $this->redirect('/deliveries');
     }
 
     public function signIn()
@@ -103,7 +105,8 @@ class AuthController extends _BaseController
 
         $_SESSION['identity_id'] = $identity['id'];
 
-        $this->redirect('/dashboard');
+        // $this->redirect('/dashboard');
+        $this->redirect('/deliveries');
     }
 
     public function signUp()
@@ -153,7 +156,8 @@ class AuthController extends _BaseController
 
         $_SESSION['identity_id'] = $identity['id'];
 
-        $this->redirect('/dashboard');
+        // $this->redirect('/dashboard');
+        $this->redirect('/deliveries');
     }
 
     public function logOut()
