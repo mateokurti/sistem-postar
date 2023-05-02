@@ -70,14 +70,22 @@ class Delivery extends _BaseModel
         return $this->getById($delivery['id']);
     }
 
-    public function update($data)
-    {
+    public function update($id, $data) {
         $data = $this->sanitizeArray($data);
-        $sql = "INSERT {$this->table} SET recipient_id = ?,  notes = ?,  address_id = ? WHERE id = ?";
+        $sql = "UPDATE {$this->table} SET ";
+        $sql .= isset($data['holder_id']) ? "holder_id = :holder_id, " : "";
+        $sql .= isset($data['notes']) ? "notes = :notes, " : "";
+        $sql = rtrim($sql, ", ");
+        $sql .= " WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$data['recipient_name'], $data['notes'], $data['address_id']]);
+        $stmt->bindParam(':id', $id);
+        if (isset($data['holder_id'])) $stmt->bindParam(':holder_id', $data['holder_id']);
+        if (isset($data['notes'])) $stmt->bindParam(':notes', $data['notes']);
+        $stmt->execute();
+        return $this->getById($id);
     }
 
+   
     public function delete($id) {
         $id = $this->sanitize($id);
         $sql = "DELETE FROM {$this->table} WHERE id = ?";

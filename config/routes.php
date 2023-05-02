@@ -42,3 +42,4 @@ $router->get('dashboard', 'DashboardController@index', [AuthMiddleware::class]);
 $router->get('deliveries', 'DeliveryController@index', [AuthMiddleware::class]);
 $router->get('deliveries/create', 'DeliveryController@showCreateForm', [AuthMiddleware::class]);
 $router->post('deliveries/create', 'DeliveryController@create', [AuthMiddleware::class]);
+$router->post('deliveries/accept', 'DeliveryController@accept', [AuthMiddleware::class]);

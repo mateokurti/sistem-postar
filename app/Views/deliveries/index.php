@@ -10,10 +10,13 @@
 
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg my-4">
     <div class="flex items-center justify-between pb-4 bg-white dark:bg-gray-900">
+        
         <div>
+        <?php if ($identity['identity_type'] == 'user') { ?>
             <button data-modal-target="create-delivery-modal" data-modal-toggle="create-delivery-modal" class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" type="button">
               Krijo Dërgesë
             </button>
+        <?php } ?>
         </div>
         <label for="table-search" class="sr-only">Kërko</label>
         <div class="relative">
@@ -88,7 +91,7 @@
                   if ($row['holder']['type'] == 'user') {
                     $holder_title = $row['holder']['first_name'] . ' ' . $row['holder']['last_name'];
                     if ($row['holder']['id'] == $identity['id']) {
-                      $holder_subtitle = 'Pakon e ke ende ti';
+                      $holder_subtitle = 'Pakon e ke ti';
                     } else if ($row['holder']['id'] == $row['sender']['id']) {
                       $holder_subtitle = 'Pakon e ka ende dërguesi';
                     } else if ($row['holder']['id'] == $row['recipient']['id']) {
@@ -110,16 +113,18 @@
                   </td>
                   <td scope="row" class="px-6 py-4 whitespace-nowrap">
                   <div class="flex items-center">
-                  <?php if ($identity['identity_type'] == 'courier' || $identity['identity_type'] == 'employee') { ?>
-                      <div id="tooltip-accept-delivery-<?= $delivery['tracking_number'] ?>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 tooltip">
-                        Prano Dërgesën
-                        <div class="tooltip-arrow" data-popper-arrow></div>
-                      </div>
-                      <a data-tooltip-target="tooltip-accept-delivery-<?= $delivery['tracking_number'] ?>" data-tooltip-style="light" href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                        </svg>
-                      </a>
+                  <?php if ($row['holder']['id'] != $identity['id'] && ($identity['identity_type'] == 'courier' || $identity['identity_type'] == 'employee')) { ?>
+                      <form action="/deliveries/accept?delivery_id=<?= $row['id'] ?>" method="POST">
+                          <div id="tooltip-accept-delivery-<?= $delivery['tracking_number'] ?>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 tooltip">
+                            Prano Dërgesën
+                            <div class="tooltip-arrow" data-popper-arrow></div>
+                          </div>
+                          <button data-tooltip-target="tooltip-accept-delivery-<?= $delivery['tracking_number'] ?>" data-tooltip-style="light" href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                            </svg>
+                          </button>
+                      </form>
                   <?php } ?>
                       
                       <div id="tooltip-track-delivery-<?= $delivery['tracking_number'] ?>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 tooltip">

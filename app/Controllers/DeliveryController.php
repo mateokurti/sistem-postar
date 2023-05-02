@@ -87,7 +87,7 @@ class DeliveryController extends _BaseController
                 $tracking_history['holder']['type'] = $tracking_holder['type'];  
             }
 
-            $delivery['status'] = ucfirst($this->tracking_history->getLatestByDeliveryId($delivery['id'])['status']);
+            $delivery['status'] = ucwords(str_replace("_", " ", $this->tracking_history->getLatestByDeliveryId($delivery['id'])['status']));
         }
 
         // Render the deliveries view
@@ -99,6 +99,25 @@ class DeliveryController extends _BaseController
         $identity = $this->identity->getById($identityId);
 
         $this->view('deliveries/create', ['identity' => $identity]);
+    }
+
+    public function accept() {
+        $deliveryId = $_GET['delivery_id'];
+        $identityId = $_SESSION['identity_id'];
+
+        $this->tracking_history->create([
+            'delivery_id' => $deliveryId,
+            'holder_id' => $identityId,
+            'description' => 'Dërgesa u morr nga korrieri',
+            'status' => 'picked_up',
+            'created_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        $this->delivery->update($deliveryId, [
+            'holder_id' => $this->package_holder->getByIdentityId($identityId)['id'],
+        ]);
+
+        $this->redirect('/deliveries');
     }
 
     public function create() {
