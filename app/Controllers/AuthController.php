@@ -223,4 +223,28 @@ class AuthController extends _BaseController
         }
         $this->redirect('/auth/login');
     }
+    
+    public function updateUserSettings() {
+        $id                 =   $_SESSION['identity_id']; 
+        $email              =   $_POST['email']; 
+        $first_name         =   $_POST['first_name'];
+        $last_name          =   $_POST['last_name'];
+        $new_password       =   $_POST['password'];
+
+        $data = [
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'email' => $email,
+            'id' => $id
+        ];
+
+        $this->identity->update($data);
+
+        if(isset($new_password)) {
+            $hashedPassword = password_hash($new_password, PASSWORD_DEFAULT);
+            $this->identity->setPassword($email, $hashedPassword); 
+        }
+
+        $this->redirect('/dashboard');
+    }
 }

@@ -78,4 +78,11 @@ class Identity extends _BaseModel
 
         return $this->getById($this->pdo->lastInsertId());
     }
+
+    public function update($data) {
+        $data = $this->sanitizeArray($data);
+        $sql = "UPDATE {$this->table} SET email = ?, first_name = ?, last_name = ? WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$data['email'], $data['first_name'], $data['last_name'], $data['id']]);
+    }
 }
