@@ -10,25 +10,13 @@
 
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg my-4">
     <div class="flex items-center justify-between pb-4 bg-white dark:bg-gray-900">
+        
         <div>
-            <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction" class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" type="button">
-                <span class="sr-only">Action button</span>
-                Veprime
-                <svg class="w-3 h-3 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        <?php if ($identity['identity_type'] == 'user') { ?>
+            <button data-modal-target="create-delivery-modal" data-modal-toggle="create-delivery-modal" class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" type="button">
+              Krijo Dërgesë
             </button>
-            <div id="dropdownAction" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownActionButton">
-                    <li>
-                        <a data-modal-target="create-delivery-modal" data-modal-toggle="create-delivery-modal" href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Krijo Dërgesë</a>
-                    </li>
-                    <li>
-                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Ndrysho Dërgesë</a>
-                    </li>
-                </ul>
-                <div class="py-1">
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Fshi Dërgesë</a>
-                </div>
-            </div>
+        <?php } ?>
         </div>
         <label for="table-search" class="sr-only">Kërko</label>
         <div class="relative">
@@ -103,7 +91,7 @@
                   if ($row['holder']['type'] == 'user') {
                     $holder_title = $row['holder']['first_name'] . ' ' . $row['holder']['last_name'];
                     if ($row['holder']['id'] == $identity['id']) {
-                      $holder_subtitle = 'Pakon e ke ende ti';
+                      $holder_subtitle = 'Pakon e ke ti';
                     } else if ($row['holder']['id'] == $row['sender']['id']) {
                       $holder_subtitle = 'Pakon e ka ende dërguesi';
                     } else if ($row['holder']['id'] == $row['recipient']['id']) {
@@ -125,17 +113,40 @@
                   </td>
                   <td scope="row" class="px-6 py-4 whitespace-nowrap">
                   <div class="flex items-center">
-                      <a data-modal-target="tracking-history-modal-<?= $delivery['tracking_number'] ?>" data-modal-toggle="tracking-history-modal-<?= $row['tracking_number'] ?>" id="open-tracking-modal" href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                  <?php if ($row['holder']['id'] != $identity['id'] && ($identity['identity_type'] == 'courier' || $identity['identity_type'] == 'employee')) { ?>
+                      <form action="/deliveries/accept?delivery_id=<?= $row['id'] ?>" method="POST">
+                          <div id="tooltip-accept-delivery-<?= $delivery['tracking_number'] ?>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 tooltip">
+                            Prano Dërgesën
+                            <div class="tooltip-arrow" data-popper-arrow></div>
+                          </div>
+                          <button data-tooltip-target="tooltip-accept-delivery-<?= $delivery['tracking_number'] ?>" data-tooltip-style="light" href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                            </svg>
+                          </button>
+                      </form>
+                  <?php } ?>
+                      
+                      <div id="tooltip-track-delivery-<?= $delivery['tracking_number'] ?>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 tooltip">
+                        Gjurmo Dërgesën
+                        <div class="tooltip-arrow" data-popper-arrow></div>
+                      </div>
+                      <a data-tooltip-target="tooltip-track-delivery-<?= $delivery['tracking_number'] ?>" data-modal-target="tracking-history-modal-<?= $delivery['tracking_number'] ?>" data-modal-toggle="tracking-history-modal-<?= $row['tracking_number'] ?>" href="#" class="pl-4 font-medium text-blue-600 dark:text-blue-500 hover:underline">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
                         </svg>
                       </a>
-                      <a href="#" class="pl-4 font-medium text-blue-600 dark:text-blue-500 hover:underline">
+
+                      <div id="tooltip-edit-delivery-<?= $delivery['tracking_number'] ?>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 tooltip">
+                        Ndrysho Dërgesën
+                        <div class="tooltip-arrow" data-popper-arrow></div>
+                      </div>
+                      <a data-tooltip-target="tooltip-edit-delivery-<?= $delivery['tracking_number'] ?>" href="#" class="pl-4 font-medium text-blue-600 dark:text-blue-500 hover:underline">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                         </svg>
                       </a>
-                      </div>
+                    </div>
                   </td>
               </tr>
             <?php

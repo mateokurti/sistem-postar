@@ -15,8 +15,34 @@ class Delivery extends _BaseModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getByHolderId($holderId) {
-        $sql = "SELECT * FROM {$this->table} WHERE holder_id = ?";
+    public function getByHolderId($holderId, $holderType) {
+        // god forgive me for this query :(
+        if ($holderType = 'courier') {
+            $sql = "
+            SELECT t1.*, t2.status FROM {$this->table} t1
+            JOIN tracking_history t2 ON t1.id = t2.delivery_id
+            JOIN (
+                SELECT delivery_id, MAX(created_at) AS latest_created_at
+                FROM tracking_history
+                GROUP BY delivery_id
+            ) t3 ON t2.delivery_id = t3.delivery_id AND t2.created_at = t3.latest_created_at
+            WHERE t1.holder_id = ? OR t2.status = 'created' OR t2.status = 'in_post_office'
+            ";
+        } else if ($holderType = 'office') {
+            $sql = "
+            SELECT t1.*, t2.status FROM {$this->table} t1
+            JOIN tracking_history t2 ON t1.id = t2.delivery_id
+            JOIN (
+                SELECT delivery_id, MAX(created_at) AS latest_created_at
+                FROM tracking_history
+                GROUP BY delivery_id
+            ) t3 ON t2.delivery_id = t3.delivery_id AND t2.created_at = t3.latest_created_at
+            WHERE t1.holder_id = ? OR t2.status = 'picked_up' OR t2.status = 'in_transit'
+            ";
+        } else {
+            $sql = "SELECT * FROM {$this->table} WHERE holder_id = ?";
+        }
+        
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$holderId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -44,14 +70,22 @@ class Delivery extends _BaseModel
         return $this->getById($delivery['id']);
     }
 
-    public function update($data)
-    {
+    public function update($id, $data) {
         $data = $this->sanitizeArray($data);
-        $sql = "INSERT {$this->table} SET recipient_id = ?,  notes = ?,  address_id = ? WHERE id = ?";
+        $sql = "UPDATE {$this->table} SET ";
+        $sql .= isset($data['holder_id']) ? "holder_id = :holder_id, " : "";
+        $sql .= isset($data['notes']) ? "notes = :notes, " : "";
+        $sql = rtrim($sql, ", ");
+        $sql .= " WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$data['recipient_name'], $data['notes'], $data['address_id']]);
+        $stmt->bindParam(':id', $id);
+        if (isset($data['holder_id'])) $stmt->bindParam(':holder_id', $data['holder_id']);
+        if (isset($data['notes'])) $stmt->bindParam(':notes', $data['notes']);
+        $stmt->execute();
+        return $this->getById($id);
     }
 
+   
     public function delete($id) {
         $id = $this->sanitize($id);
         $sql = "DELETE FROM {$this->table} WHERE id = ?";

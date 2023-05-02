@@ -37,9 +37,9 @@
                                 $holder_title = $tracking_history_item['holder']['first_name'] . ' ' . $tracking_history_item['holder']['last_name'];
                                 if ($tracking_history_item['holder']['id'] == $identity['id']) {
                                     $holder_subtitle = 'ti';
-                                } else if ($tracking_history_item['holder']['id'] == $row['sender']['id']) {
+                                } else if ($tracking_history_item['holder']['id'] == $delivery['sender']['id']) {
                                     $holder_subtitle = 'Dërguesi';
-                                } else if ($tracking_history_item['holder']['id'] == $row['recipient']['id']) {
+                                } else if ($tracking_history_item['holder']['id'] == $delivery['recipient']['id']) {
                                     $holder_subtitle = 'Marrësi';
                                 }
                             } else if ($tracking_history_item['holder']['type'] == 'courier') {

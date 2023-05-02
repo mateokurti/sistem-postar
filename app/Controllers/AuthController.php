@@ -115,7 +115,7 @@ class AuthController extends _BaseController
         $last_name = $_POST['last_name'];
         $email = $_POST['email'];
         $password = $_POST['password'];
-        $identity_type = $_POST['identity_type'];
+        // $identity_type = $_POST['identity_type'];
 
         if (empty($first_name) || empty($last_name) || empty($email) || empty($password)) {
             $this->flash('error', 'Please enter your name, email, and password.');
