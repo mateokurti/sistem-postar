@@ -9,7 +9,7 @@ class Delivery extends _BaseModel
     protected $table = 'deliveries';
 
     public function getAll() {
-        $sql = "select *, CONCAT(i.first_name, ' ', i.last_name) as resposible_person_name, d.id as id from deliveries d join identities i";;
+        $sql = "select *, CONCAT(i.first_name, ' ', i.last_name) as resposible_person_name, d.id as id from deliveries d left join identities i on d.sender_id = i.id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
