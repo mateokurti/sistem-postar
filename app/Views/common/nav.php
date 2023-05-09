@@ -105,6 +105,13 @@
 
                       <div class="mt-4">
                           <div class="flex justify-between">
+                              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Numri i telefonit</label>
+                          </div>
+                          <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" id="phone" name="phone" type="text" placeholder="" value="<?= $identity['phone']; ?>">
+                      </div>
+
+                      <div class="mt-4">
+                          <div class="flex justify-between">
                               <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fjalekalimi</label>
                           </div>
                           <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" id="password" name="password" type="password" placeholder="••••••••••" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="The password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.">

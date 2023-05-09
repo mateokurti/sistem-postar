@@ -7,6 +7,15 @@ class Identity extends _BaseModel
 {
     protected $table = 'identities';
 
+    public function getAll()
+    {
+        $sql = "SELECT * FROM {$this->table}";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
     public function getByEmail($email)
     {
         return $this->getBy('email', $email);
@@ -81,8 +90,8 @@ class Identity extends _BaseModel
 
     public function update($data) {
         $data = $this->sanitizeArray($data);
-        $sql = "UPDATE {$this->table} SET email = ?, first_name = ?, last_name = ? WHERE id = ?";
+        $sql = "UPDATE {$this->table} SET email = ?, first_name = ?, last_name = ?, phone = ? WHERE id = ?";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$data['email'], $data['first_name'], $data['last_name'], $data['id']]);
+        $stmt->execute([$data['email'], $data['first_name'], $data['last_name'], $data['phone'], $data['id']]);
     }
 }

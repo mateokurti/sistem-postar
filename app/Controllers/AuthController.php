@@ -229,22 +229,24 @@ class AuthController extends _BaseController
         $email              =   $_POST['email']; 
         $first_name         =   $_POST['first_name'];
         $last_name          =   $_POST['last_name'];
+        $phone              =   $_POST['phone'];
         $new_password       =   $_POST['password'];
 
         $data = [
             'first_name' => $first_name,
             'last_name' => $last_name,
             'email' => $email,
+            'phone' => $phone,
             'id' => $id
         ];
 
         $this->identity->update($data);
 
-        if(isset($new_password)) {
-            $hashedPassword = password_hash($new_password, PASSWORD_DEFAULT);
-            $this->identity->setPassword($email, $hashedPassword); 
+        if(!empty($new_password)) {
+             $hashedPassword = password_hash($new_password, PASSWORD_DEFAULT);
+             $this->identity->setPassword($email, $hashedPassword); 
         }
 
-        $this->redirect('/dashboard');
+        $this->redirect('/deliveries');
     }
 }
