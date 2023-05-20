@@ -28,11 +28,11 @@ class _BaseController
         echo json_encode($data);
     }
 
-    protected function flash($type, $message)
+    protected function flash($type, $message, $form = null)
     {
         $_SESSION['flash'][$type] = [
             'message' => $message,
-            'form' => $_SERVER['REQUEST_URI']
+            'form' => $form != null ? $form : $_SERVER['REQUEST_URI']
         ];
     }
 
