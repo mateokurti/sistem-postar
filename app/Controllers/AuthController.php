@@ -194,7 +194,7 @@ class AuthController extends _BaseController
         $mail->Password   = $_ENV['SMTP_PASSWORD'];
         
         //Recipients
-        $mail->setFrom('luftarcangollari11@gmail.com');
+        $mail->setFrom($_ENV['SMTP_USERNAME']);
         $mail->addAddress($email);
 
         // Content
