@@ -186,13 +186,13 @@ class AuthController extends _BaseController
         // Enable verbose debug output
         $mail->SMTPDebug = 2; 
         $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com';
-        $mail->SMTPAuth   = true;
-        $mail->Username   = 'luftarcangollari11@gmail.com';
-        $mail->Password   = 'tmvwlil v pgds hzwi';
+        $mail->Host       = $_ENV['SMTP_HOST'];
+        $mail->Port       = $_ENV['SMTP_PORT'];
         $mail->SMTPSecure = 'ssl';
-        $mail->Port       = 465;
-    
+        $mail->SMTPAuth   = true;
+        $mail->Username   = $_ENV['SMTP_USERNAME'];
+        $mail->Password   = $_ENV['SMTP_PASSWORD'];
+        
         //Recipients
         $mail->setFrom('luftarcangollari11@gmail.com');
         $mail->addAddress($email);
