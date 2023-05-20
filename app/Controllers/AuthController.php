@@ -92,7 +92,7 @@ class AuthController extends _BaseController
 
         if (empty($email) || empty($password)) {
             $this->flash('error', 'Please enter your email and password.');
-            $this->redirect('/login');
+            $this->redirect('/auth/login');
         }
 
         // Check if the identity exists in the database
@@ -100,7 +100,7 @@ class AuthController extends _BaseController
 
         if (!$identity || !password_verify($password, $identity['password'])) {
             $this->flash('error', 'Incorrect email or password.');
-            $this->redirect('/login');
+            $this->redirect('/auth/login');
         }
 
         $_SESSION['identity_id'] = $identity['id'];
@@ -186,15 +186,15 @@ class AuthController extends _BaseController
         // Enable verbose debug output
         $mail->SMTPDebug = 2; 
         $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com';
-        $mail->SMTPAuth   = true;
-        $mail->Username   = 'postafshnverify@gmail.com';
-        $mail->Password   = 'jzqn xlgz vuba gnup';
+        $mail->Host       = $_ENV['SMTP_HOST'];
+        $mail->Port       = $_ENV['SMTP_PORT'];
         $mail->SMTPSecure = 'ssl';
-        $mail->Port       = 465;
-    
+        $mail->SMTPAuth   = true;
+        $mail->Username   = $_ENV['SMTP_USERNAME'];
+        $mail->Password   = $_ENV['SMTP_PASSWORD'];
+        
         //Recipients
-        $mail->setFrom('postafshn@gmail.com', 'PostaFSHN');
+        $mail->setFrom('luftarcangollari11@gmail.com');
         $mail->addAddress($email);
 
         // Content
@@ -213,17 +213,38 @@ class AuthController extends _BaseController
         $email      =   $_POST['email']; 
         $code       =   $_POST['code'];
         $password   =   $_POST['password'];
+        
+        $identity = $this->identity->getByEmail($email);
+        
+        if (!is_array($identity)) {
+            $this->flash('error', 'Email not found!');
+            $this->redirect('/auth/reset-password/');
+        }
+        
+        $currentPassword = $identity['password'];
 
+        if (isset($_POST['password']) && strlen(trim($_POST['password'])) < 8) {
+            $this->flash('error', 'New password must be at least 8 characters long!');
+            $this->redirect('/auth/reset-password/confirm?email=' . $email . '&code=' . $code);
+        }
+    
+        if (isset($_POST['password']) && password_verify($password, $currentPassword)) {
+            $this->flash('error', 'New password cannot be the same as the old password!');
+            $this->redirect('/auth/reset-password/confirm?email=' . $email . '&code=' . $code);
+        }
+        
         $valid_code = $this->identity->isValidResetCode($email, $code);
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        
-        if($valid_code){
-            $this->flash('success', 'Password reset successfully!');
-            $this->identity->setPassword($email, $hashedPassword);
-        }
-        $this->redirect('/auth/login');
-    }
     
+        if (isset($_POST['password']) && $valid_code) {
+            $this->flash('success', 'Password reset successfully!', '/auth/login');
+            $this->identity->setPassword($email, $hashedPassword);
+            $this->redirect('/auth/login');
+        } else {
+            $this->flash('error', 'Invalid reset code!');
+            $this->redirect('/auth/reset-password/confirm?email=' . $email . '&code=' . $code);
+        }
+    }
     public function updateUserSettings() {
         $id                 =   $_SESSION['identity_id']; 
         $email              =   $_POST['email']; 
