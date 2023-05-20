@@ -6,7 +6,17 @@
                 <span class="sr-only">Close modal</span>
             </button>
             <div class="p-6 text-center">
-                <img src="assets/qr-codes/<?= $delivery['tracking_number'] ?>.png" alt="">
+                <div class="my-2">
+                    <img class="w-full" src="assets/qr-codes/<?= $delivery['tracking_number'] ?>.png" alt="">
+                </div>
+                <div class="mt-4 flex items-center justify-between">
+                    <span class="border-b w-1/5 lg:w-1/2"></span>
+                    <p class="mx-2 text-center font-medium text-gray-900 whitespace-nowrap dark:text-white">Barcode</p>
+                    <span class="border-b w-1/5 lg:w-1/2"></span>
+                </div>
+                <div class="bg-white p-2 my-2">
+                    <img class="w-full" src="assets/barcodes/<?= $delivery['tracking_number'] ?>.png" alt="">
+                </div>
             </div>
         </div>
     </div>

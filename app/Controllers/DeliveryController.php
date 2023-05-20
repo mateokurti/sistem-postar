@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Core\Helpers;
 use App\Models\Delivery;
 use App\Models\Identity;
 use App\Models\PackageHolder;
@@ -33,41 +34,12 @@ class DeliveryController extends _BaseController
         $this->tracking_history = new TrackingHistory($pdo);
     }
 
-    public function index()
-    {
-        $identityId = $_SESSION['identity_id'];
-        $identity = $this->identity->getById($identityId);
+    private function advancedDelivery(&$delivery, $identity) {
+        $delivery['sender'] = $this->identity->getById($delivery['sender_id']);
+        $delivery['recipient'] = $this->identity->getById($delivery['recipient_id']);
+        $delivery['address'] = $this->address->getById($delivery['address_id']);
 
-        switch ($identity['identity_type']) {
-            case 'admin':
-                $deliveries = $this->delivery->getAll();
-                break;
-            case 'courier':
-                $deliveries = $this->delivery->getByHolderId(
-                    $this->package_holder->getByIdentityId($identityId)['id'], 'courier'
-                );
-                break;
-            case 'employee':
-                $deliveries = $this->delivery->getByHolderId(
-                    $this->package_holder->getByOfficeId(
-                        $this->employee->getByIdentityId($identityId)['office_id'], 'office'
-                    )['id']
-                );
-                break;
-            case 'user':
-                $deliveries = $this->delivery->getByUser($identityId);
-                break;
-            default:
-                $deliveries = $this->delivery->getByUser($identityId);
-                break;
-        }
-
-        foreach ($deliveries as &$delivery) {
-            $delivery['sender'] = $this->identity->getById($delivery['sender_id']);
-            $delivery['recipient'] = $this->identity->getById($delivery['recipient_id']);
-            $delivery['address'] = $this->address->getById($delivery['address_id']);
-
-            $holder = $this->package_holder->getById($delivery['holder_id']);
+        $holder = $this->package_holder->getById($delivery['holder_id']);
             if ($holder['type'] == 'office') {
                 $delivery['holder'] = $this->office->getById($holder['office_id']);
                 $delivery['holder']['title'] = $delivery['holder']['name'];
@@ -102,7 +74,7 @@ class DeliveryController extends _BaseController
                     $tracking_history['holder']['title'] = $tracking_history['holder']['name'];
                     $tracking_history['holder']['subtitle'] = 'Pakoja në zyrë postare';
                 } else {
-                    $tracking_history['holder'] = $this->identity->getById($tracking_holder['id']);
+                    $tracking_history['holder'] = $this->identity->getById($tracking_holder['identity_id']);
                     $tracking_history['holder']['title'] = $tracking_history['holder']['first_name'] . ' ' . $tracking_history['holder']['last_name'];
 
                     if ($tracking_history['holder']['id'] == $identity['id']) {
@@ -146,6 +118,36 @@ class DeliveryController extends _BaseController
             ];
 
             $delivery['status_display'] = $status_messages[$delivery['status']];
+    }
+
+    public function index()
+    {
+        $identity = $this->identity->getById($_SESSION['identity_id']);
+
+        switch ($identity['identity_type']) {
+            case 'admin':
+                $deliveries = $this->delivery->getAll();
+                break;
+            case 'courier':
+                $deliveries = $this->delivery->getByHolderId(
+                    $this->package_holder->getByIdentityId($identity['id'])['id'], 'courier'
+                );
+                break;
+            case 'employee':
+                $deliveries = $this->delivery->getByHolderId(
+                    $this->employee->getByIdentityId($identity['id'])['office_id'], 'office'
+                );
+                break;
+            case 'user':
+                $deliveries = $this->delivery->getByUser($identity['id']);
+                break;
+            default:
+                $deliveries = $this->delivery->getByUser($identity['id']);
+                break;
+        }
+
+        foreach ($deliveries as &$delivery) {
+            $this->advancedDelivery($delivery, $identity);
         }
 
         // Render the deliveries view
@@ -160,20 +162,54 @@ class DeliveryController extends _BaseController
     }
 
     public function accept() {
-        $deliveryId = $_GET['delivery_id'];
-        $identityId = $_SESSION['identity_id'];
+        $delivery = $this->delivery->getById($_GET['delivery_id']);
+        $identity = $this->identity->getById($_SESSION['identity_id']);
+        $this->advancedDelivery($delivery, $identity);
+
+        if ($delivery['status'] == 'created' && $identity['identity_type'] == 'courier') {
+            $status = 'accepted';
+            $status_message = 'Dërgesa u pranua nga korrieri. Në pritje të marrjes.';
+            $holder_id = $this->package_holder->getByIdentityId($identity['id'])['id'];
+        }
+        if ($delivery['status'] == 'accepted' && $identity['identity_type'] == 'courier') {
+            $status = 'picked_up';
+            $status_message = 'Dërgesa u morr nga korrieri';
+            $holder_id = $this->package_holder->getByIdentityId($identity['id'])['id'];
+        }
+        if ($delivery['status'] == 'picked_up' && $identity['identity_type'] == 'employee') {
+            $status = 'in_post_office';
+            $status_message = 'Dërgesa u pranua nga zyra postare.';
+            $holder_id = $this->package_holder->getByOfficeId($this->employee->getByIdentityId($identity['id'])['office_id'])['id'];
+        }
+        if ($delivery['status'] == 'in_post_office' && $identity['identity_type'] == 'courier') {
+            $status = 'out_for_delivery';
+            $status_message = 'Dërgesa është në rrugë për dorëzim.';
+            $holder_id = $this->package_holder->getByIdentityId($identity['id'])['id'];
+        }
+        if ($delivery['status'] == 'out_for_delivery' && $identity['id'] == $delivery['recipient']['id']) {
+            $status = 'delivered';
+            $status_message = 'Dërgesa u dorëzua.';
+            $holder_id = $this->package_holder->getByIdentityId($identity['id'])['id'];
+        }
 
         $this->tracking_history->create([
-            'delivery_id' => $deliveryId,
-            'holder_id' => $identityId,
-            'description' => 'Dërgesa u morr nga korrieri',
-            'status' => 'picked_up',
+            'delivery_id' => $delivery['id'],
+            'holder_id' => $holder_id,
+            'description' => $status_message,
+            'status' => $status,
             'created_at' => date('Y-m-d H:i:s'),
         ]);
 
-        $this->delivery->update($deliveryId, [
-            'holder_id' => $this->package_holder->getByIdentityId($identityId)['id'],
+        $this->delivery->update($delivery['id'], [
+            'holder_id' => $holder_id,
         ]);
+
+        // Sets the office_id of the delivery to the office_id of the courier that accepted the delivery
+        if ($status == 'accepted') {
+            $this->delivery->update($delivery['id'], [
+                'office_id' => $this->employee->getByIdentityId($identity['id'])['office_id'],
+            ]);
+        }
 
         $this->redirect('/deliveries');
     }
@@ -225,6 +261,9 @@ class DeliveryController extends _BaseController
             'status' => 'created',
             'created_at' => date('Y-m-d H:i:s'),
         ]);
+
+        Helpers::createQRCode($data['tracking_number'], "https://projects.mateokurti.com/fshn/sistem-postar/tracking?tracking_number=" . $data['tracking_number']);
+        Helpers::createBarcode($data['tracking_number'], $data['tracking_number']);
 
         $this->redirect('/deliveries');
     }

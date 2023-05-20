@@ -5,35 +5,23 @@
 <div class="p-4 sm:ml-64 mt-10 bg-white dark:bg-gray-900 h-100">
 
 <?php
-use Endroid\QrCode\QrCode;
-use Endroid\QrCode\Writer\PngWriter; 
-
-function createQRCode($name, $content) {
-  $qr = QrCode::create($content);
-  $writer = new PngWriter();
-  $filename = "assets/qr-codes/" . $name . ".png";
-
-  if (!file_exists($filename)) {
-    $writer->write($qr)->saveToFile($filename);
-  }
-}
 
 function checkElgibleToAcceptDelivery($delivery, $identity)
 {
     if ($delivery['status'] == 'created' && $identity['identity_type'] == 'courier') {
-        return true;
+        return "Prano Dërgesën";
     }
     if ($delivery['status'] == 'accepted' && $identity['identity_type'] == 'courier') {
-        return true;
+        return "Merr Dërgesën në Dorëzim";
     }
     if ($delivery['status'] == 'picked_up' && $identity['identity_type'] == 'employee') {
-        return true;
+        return "Prano Dërgesën";
     }
     if ($delivery['status'] == 'in_post_office' && $identity['identity_type'] == 'courier') {
-        return true;
+        return "Merr Dërgesën për Dorëzim";
     }
     if ($delivery['status'] == 'out_for_delivery' && $identity['id'] == $delivery['recipient']['id']) {
-        return true;
+        return "Prano Dërgesën";
     }
     return false;
 }
@@ -43,7 +31,7 @@ function checkElgibleToAcceptDelivery($delivery, $identity)
 
 <?php include __DIR__ . '/create.php'; ?>
 
-<div class="relative overflow-x-auto shadow-md sm:rounded-lg my-4">
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg my-4 min-h-[calc(100vh-105px)]">
     <div class="flex items-center justify-between pb-4 bg-white dark:bg-gray-900">
         
         <div>
@@ -101,7 +89,6 @@ function checkElgibleToAcceptDelivery($delivery, $identity)
         <tbody id="table-deliveries-body">
             <?php
               foreach ($deliveries as $delivery) {
-                createQRCode($delivery['tracking_number'], $delivery['tracking_number']);
             ?>
               <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                   <td class="w-4 p-4">

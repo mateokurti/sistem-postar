@@ -17,7 +17,7 @@ class Delivery extends _BaseModel
 
     public function getByHolderId($holderId, $holderType) {
         // god forgive me for this query :(
-        if ($holderType = 'courier') {
+        if ($holderType == 'courier') {
             $sql = "
             SELECT t1.*, t2.status FROM {$this->table} t1
             JOIN tracking_history t2 ON t1.id = t2.delivery_id
@@ -26,9 +26,9 @@ class Delivery extends _BaseModel
                 FROM tracking_history
                 GROUP BY delivery_id
             ) t3 ON t2.delivery_id = t3.delivery_id AND t2.created_at = t3.latest_created_at
-            WHERE t1.holder_id = ? OR t2.status = 'created' OR t2.status = 'in_post_office'
+            WHERE t1.holder_id = ? OR t2.status = 'created' OR t2.status = 'accepted' OR t2.status = 'in_post_office'
             ";
-        } else if ($holderType = 'office') {
+        } else if ($holderType == 'office') {
             $sql = "
             SELECT t1.*, t2.status FROM {$this->table} t1
             JOIN tracking_history t2 ON t1.id = t2.delivery_id
@@ -37,7 +37,7 @@ class Delivery extends _BaseModel
                 FROM tracking_history
                 GROUP BY delivery_id
             ) t3 ON t2.delivery_id = t3.delivery_id AND t2.created_at = t3.latest_created_at
-            WHERE t1.holder_id = ? OR t2.status = 'picked_up' OR t2.status = 'in_transit'
+            WHERE t1.office_id = ?
             ";
         } else {
             $sql = "SELECT * FROM {$this->table} WHERE holder_id = ?";
@@ -74,12 +74,14 @@ class Delivery extends _BaseModel
         $data = $this->sanitizeArray($data);
         $sql = "UPDATE {$this->table} SET ";
         $sql .= isset($data['holder_id']) ? "holder_id = :holder_id, " : "";
+        $sql .= isset($data['office_id']) ? "office_id = :office_id, " : "";
         $sql .= isset($data['notes']) ? "notes = :notes, " : "";
         $sql = rtrim($sql, ", ");
         $sql .= " WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
         if (isset($data['holder_id'])) $stmt->bindParam(':holder_id', $data['holder_id']);
+        if (isset($data['office_id'])) $stmt->bindParam(':office_id', $data['office_id']);
         if (isset($data['notes'])) $stmt->bindParam(':notes', $data['notes']);
         $stmt->execute();
         return $this->getById($id);

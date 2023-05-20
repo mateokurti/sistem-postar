@@ -168,7 +168,7 @@ class AuthController extends _BaseController
 
     public function resetPassword()
     {
-        $email = $_POST['email']; 
+        $email = $_POST['email'];
 
         // $identity = $this->identity->getByEmail($email);
 
@@ -184,24 +184,24 @@ class AuthController extends _BaseController
 
         // Server settings
         // Enable verbose debug output
-        $mail->SMTPDebug = 2; 
+        $mail->SMTPDebug = 2;
         $mail->isSMTP();
-        $mail->Host       = $_ENV['SMTP_HOST'];
-        $mail->Port       = $_ENV['SMTP_PORT'];
+        $mail->Host = $_ENV['SMTP_HOST'];
+        $mail->Port = $_ENV['SMTP_PORT'];
         $mail->SMTPSecure = 'ssl';
-        $mail->SMTPAuth   = true;
-        $mail->Username   = $_ENV['SMTP_USERNAME'];
-        $mail->Password   = $_ENV['SMTP_PASSWORD'];
-        
+        $mail->SMTPAuth = true;
+        $mail->Username = $_ENV['SMTP_USERNAME'];
+        $mail->Password = $_ENV['SMTP_PASSWORD'];
+
         //Recipients
         $mail->setFrom($_ENV['SMTP_USERNAME']);
         $mail->addAddress($email);
 
         // Content
-        $mail->isHTML(true); 
-        $mail->Subject  = 'Test Email';
-        $reset_link     = sprintf('http://localhost:8000/auth/reset-password/confirm?email=%s&code=%s', $email, $code);
-        $mail->Body     = "Reset Password: " . $reset_link; 
+        $mail->isHTML(true);
+        $mail->Subject = 'Test Email';
+        $reset_link = sprintf('http://localhost:8000/auth/reset-password/confirm?email=%s&code=%s', $email, $code);
+        $mail->Body = "Reset Password: " . $reset_link;
 
         $mail->send();
 
@@ -209,33 +209,34 @@ class AuthController extends _BaseController
         $this->redirect('/auth/reset-password');
     }
 
-    public function setNewPassword() {
-        $email      =   $_POST['email']; 
-        $code       =   $_POST['code'];
-        $password   =   $_POST['password'];
-        
+    public function setNewPassword()
+    {
+        $email = $_POST['email'];
+        $code = $_POST['code'];
+        $password = $_POST['password'];
+
         $identity = $this->identity->getByEmail($email);
-        
+
         if (!is_array($identity)) {
             $this->flash('error', 'Email not found!');
             $this->redirect('/auth/reset-password/');
         }
-        
+
         $currentPassword = $identity['password'];
 
         if (isset($_POST['password']) && strlen(trim($_POST['password'])) < 8) {
             $this->flash('error', 'New password must be at least 8 characters long!');
             $this->redirect('/auth/reset-password/confirm?email=' . $email . '&code=' . $code);
         }
-    
+
         if (isset($_POST['password']) && password_verify($password, $currentPassword)) {
             $this->flash('error', 'New password cannot be the same as the old password!');
             $this->redirect('/auth/reset-password/confirm?email=' . $email . '&code=' . $code);
         }
-        
+
         $valid_code = $this->identity->isValidResetCode($email, $code);
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    
+
         if (isset($_POST['password']) && $valid_code) {
             $this->flash('success', 'Password reset successfully!', '/auth/login');
             $this->identity->setPassword($email, $hashedPassword);
@@ -245,12 +246,14 @@ class AuthController extends _BaseController
             $this->redirect('/auth/reset-password/confirm?email=' . $email . '&code=' . $code);
         }
     }
-    public function updateUserSettings() {
-        $id                 =   $_SESSION['identity_id']; 
-        $email              =   $_POST['email']; 
-        $first_name         =   $_POST['first_name'];
-        $last_name          =   $_POST['last_name'];
-        $new_password       =   $_POST['password'];
+
+    public function updateUserSettings()
+    {
+        $id = $_SESSION['identity_id'];
+        $email = $_POST['email'];
+        $first_name = $_POST['first_name'];
+        $last_name = $_POST['last_name'];
+        $new_password = $_POST['password'];
 
         $data = [
             'first_name' => $first_name,
@@ -261,9 +264,9 @@ class AuthController extends _BaseController
 
         $this->identity->update($data);
 
-        if(isset($new_password)) {
+        if (isset($new_password)) {
             $hashedPassword = password_hash($new_password, PASSWORD_DEFAULT);
-            $this->identity->setPassword($email, $hashedPassword); 
+            $this->identity->setPassword($email, $hashedPassword);
         }
 
         $this->redirect('/dashboard');
