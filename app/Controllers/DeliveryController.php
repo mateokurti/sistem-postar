@@ -70,8 +70,26 @@ class DeliveryController extends _BaseController
             $holder = $this->package_holder->getById($delivery['holder_id']);
             if ($holder['type'] == 'office') {
                 $delivery['holder'] = $this->office->getById($holder['office_id']);
+                $delivery['holder']['title'] = $delivery['holder']['name'];
+                $delivery['holder']['subtitle'] = 'Pakoja në zyrë postare';
+
+            } else if ($holder['type'] == 'courier') {
+                $delivery['holder'] = $this->identity->getById($holder['identity_id']);
+                $delivery['holder']['title'] = $delivery['holder']['first_name'] . ' ' . $delivery['holder']['last_name'];
+                $delivery['holder']['subtitle'] = 'Pakon e ka korrieri';
             } else {
                 $delivery['holder'] = $this->identity->getById($holder['identity_id']);
+                $delivery['holder']['title'] = $delivery['holder']['first_name'] . ' ' . $delivery['holder']['last_name'];
+
+                if ($delivery['holder']['id'] == $identity['id']) {
+                    $delivery['holder']['subtitle'] = 'Pakon e ke ti';
+                } else if ($delivery['holder']['id'] == $delivery['sender']['id']) {
+                    $delivery['holder']['subtitle'] = 'Pakon e ka ende dërguesi';
+                } else if ($delivery['holder']['id'] == $delivery['recipient']['id']) {
+                    $delivery['holder']['subtitle'] = 'Pakon e ka marrë marrësi';
+                } else {
+                    $delivery['holder']['subtitle'] = 'S\'ka informacion';
+                }
             }
             $delivery['holder']['type'] = $holder['type'];
             $delivery['tracking_history'] = $this->tracking_history->getByDeliveryId($delivery['id']);
@@ -81,13 +99,53 @@ class DeliveryController extends _BaseController
                 
                 if ($tracking_holder['type'] == 'office') {
                     $tracking_history['holder'] = $this->office->getById($tracking_holder['office_id']);
+                    $tracking_history['holder']['title'] = $tracking_history['holder']['name'];
+                    $tracking_history['holder']['subtitle'] = 'Pakoja në zyrë postare';
                 } else {
                     $tracking_history['holder'] = $this->identity->getById($tracking_holder['id']);
+                    $tracking_history['holder']['title'] = $tracking_history['holder']['first_name'] . ' ' . $tracking_history['holder']['last_name'];
+
+                    if ($tracking_history['holder']['id'] == $identity['id']) {
+                        $tracking_history['holder']['subtitle'] = 'Pakon e ke ti';
+                    } else if ($tracking_history['holder']['id'] == $delivery['sender']['id']) {
+                        $tracking_history['holder']['subtitle'] = 'Pakon e ka ende dërguesi';
+                    } else if ($tracking_history['holder']['id'] == $delivery['recipient']['id']) {
+                        $tracking_history['holder']['subtitle'] = 'Pakon e ka marrë marrësi';
+                    }
                 }
-                $tracking_history['holder']['type'] = $tracking_holder['type'];  
+                $tracking_history['holder']['type'] = $tracking_holder['type'];
             }
 
-            $delivery['status'] = ucwords(str_replace("_", " ", $this->tracking_history->getLatestByDeliveryId($delivery['id'])['status']));
+            $delivery['status'] = $this->tracking_history->getLatestByDeliveryId($delivery['id'])['status'];
+
+            $status_messages = [
+                'created' => [
+                    'message' => 'Krijuar nga Përdoruesi',
+                    'color' => 'purple',
+                ],
+                'accepted' => [
+                    'message' => 'Pranuar nga Korrieri (në pritje të marrjes)',
+                    'color' => 'orange',
+                ],
+                'picked_up' => [
+                    'message' => 'Marrë nga Korrieri',
+                    'color' => 'sky',
+                ],
+                'in_post_office' => [
+                    'message' => 'Dërgesa është në Zyrën Postare',
+                    'color' => 'blue',
+                ],
+                'out_for_delivery' => [
+                    'message' => 'Dërgesa është në Rrugë për Dorëzim',
+                    'color' => 'yellow',
+                ],
+                'delivered' => [
+                    'message' => 'Dërgesa u Dorëzua',
+                    'color' => 'green',
+                ],
+            ];
+
+            $delivery['status_display'] = $status_messages[$delivery['status']];
         }
 
         // Render the deliveries view
@@ -124,6 +182,7 @@ class DeliveryController extends _BaseController
         $data = $_POST;
 
         $recipient = $this->identity->getByEmail($_POST['recipient_email']);
+        
         if (!$recipient) {
             $recipient = $this->identity->create([
                 'first_name' => $_POST['recipient_first_name'],

@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS tracking_history (
     delivery_id INT NOT NULL,
     holder_id int NOT NULL,
     description VARCHAR(255),
-    status enum('created', 'picked_up', 'in_transit', 'in_post_office', 'delivered', 'returned', 'cancelled', 'lost'),
+    status enum('created', 'accepted', 'picked_up', 'in_post_office', 'out_for_delivery', 'delivered'),
     created_at TIMESTAMP default CURRENT_TIMESTAMP,
     FOREIGN KEY (delivery_id) REFERENCES deliveries(id),
     FOREIGN KEY (holder_id) REFERENCES package_holders(id)

@@ -91,7 +91,7 @@
                                       <option value="Prrenjas">Prrenjas</option>
                                       <option value="Delvinë">Delvinë</option>
                                       <option value="Bajram Curri">Bajram Curri</option>
-                                      <option value="Ura Vajgurore">Ura Vajgurore</option>
+                                      <option value="Dimal">Dimal</option>
                                       <option value="Rubik">Rubik</option>
                                       <option value="Tepelenë">Tepelenë</option>
                                       <option value="Poliçan">Poliçan</option>

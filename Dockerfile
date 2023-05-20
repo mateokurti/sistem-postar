@@ -8,7 +8,8 @@ RUN apt-get update && \
     git \
     unzip \
     vim \
-    libicu-dev
+    libicu-dev \
+    libpng-dev
 
 # Install Node.js and npm
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
@@ -18,7 +19,7 @@ RUN apt-get install -y nodejs
 RUN npm install -g tailwindcss
 
 # Install PHP extensions
-RUN docker-php-ext-install intl pdo_mysql
+RUN docker-php-ext-install intl pdo_mysql gd
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
