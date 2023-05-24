@@ -19,6 +19,8 @@ $router->post('auth/reset-password/confirm', 'AuthController@setNewPassword', [G
 $router->get('auth/logout', 'AuthController@logOut', [AuthMiddleware::class]);
 $router->get('oauth/google', 'AuthController@googleLogIn', [GuestMiddleware::class]);
 
+$router->get('tracking', 'TrackingHistoryController@tracking', []);
+
 
 // Redirect wrong routes (e.g. /login) to the correct ones (e.g. /auth/login)
 $router->get('login', function () {

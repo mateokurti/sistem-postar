@@ -34,7 +34,7 @@ class DeliveryController extends _BaseController
         $this->tracking_history = new TrackingHistory($pdo);
     }
 
-    private function advancedDelivery(&$delivery, $identity) {
+    public function advancedDelivery(&$delivery, $identity=null) {
         $delivery['sender'] = $this->identity->getById($delivery['sender_id']);
         $delivery['recipient'] = $this->identity->getById($delivery['recipient_id']);
         $delivery['address'] = $this->address->getById($delivery['address_id']);
@@ -51,9 +51,11 @@ class DeliveryController extends _BaseController
                 $delivery['holder']['subtitle'] = 'Pakon e ka korrieri';
             } else {
                 $delivery['holder'] = $this->identity->getById($holder['identity_id']);
-                $delivery['holder']['title'] = $delivery['holder']['first_name'] . ' ' . $delivery['holder']['last_name'];
+                $holder_first_name = $delivery['holder']['first_name'];
+                $holder_last_name = $delivery['holder']['last_name'];
+                $delivery['holder']['title'] = $identity != null ? $holder_first_name . ' ' . $holder_last_name : Helpers::hide($holder_first_name) . ' ' . Helpers::hide($holder_last_name);
 
-                if ($delivery['holder']['id'] == $identity['id']) {
+                if ($identity != null && $delivery['holder']['id'] == $identity['id']) {
                     $delivery['holder']['subtitle'] = 'Pakon e ke ti';
                 } else if ($delivery['holder']['id'] == $delivery['sender']['id']) {
                     $delivery['holder']['subtitle'] = 'Pakon e ka ende dërguesi';
@@ -73,16 +75,26 @@ class DeliveryController extends _BaseController
                     $tracking_history['holder'] = $this->office->getById($tracking_holder['office_id']);
                     $tracking_history['holder']['title'] = $tracking_history['holder']['name'];
                     $tracking_history['holder']['subtitle'] = 'Pakoja në zyrë postare';
+                } else if ($tracking_holder['type'] == 'courier') {
+                    $tracking_history['holder'] = $this->identity->getById($tracking_holder['identity_id']);
+                    $holder_first_name = $tracking_history['holder']['first_name'];
+                    $holder_last_name = $tracking_history['holder']['last_name'];
+                    $tracking_history['holder']['title'] = $holder_first_name . ' ' . $holder_last_name;
+                    $tracking_history['holder']['subtitle'] = 'Korrieri';
                 } else {
                     $tracking_history['holder'] = $this->identity->getById($tracking_holder['identity_id']);
-                    $tracking_history['holder']['title'] = $tracking_history['holder']['first_name'] . ' ' . $tracking_history['holder']['last_name'];
+                    $holder_first_name = $tracking_history['holder']['first_name'];
+                    $holder_last_name = $tracking_history['holder']['last_name'];
+                    $tracking_history['holder']['title'] = $identity != null ? $holder_first_name . ' ' . $holder_last_name : Helpers::hide($holder_first_name) . ' ' . Helpers::hide($holder_last_name);
 
-                    if ($tracking_history['holder']['id'] == $identity['id']) {
+                    if ($identity != null && $tracking_history['holder']['id'] == $identity['id']) {
                         $tracking_history['holder']['subtitle'] = 'Pakon e ke ti';
                     } else if ($tracking_history['holder']['id'] == $delivery['sender']['id']) {
                         $tracking_history['holder']['subtitle'] = 'Pakon e ka ende dërguesi';
                     } else if ($tracking_history['holder']['id'] == $delivery['recipient']['id']) {
                         $tracking_history['holder']['subtitle'] = 'Pakon e ka marrë marrësi';
+                    } else {
+                        $tracking_history['holder']['subtitle'] = 'S\'ka informacion';
                     }
                 }
                 $tracking_history['holder']['type'] = $tracking_holder['type'];

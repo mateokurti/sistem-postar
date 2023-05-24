@@ -15,6 +15,13 @@ class Delivery extends _BaseModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getByTrackingNumber($trackingNumber) {
+        $sql = "SELECT * FROM {$this->table} WHERE tracking_number = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$trackingNumber]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function getByHolderId($holderId, $holderType) {
         // god forgive me for this query :(
         if ($holderType == 'courier') {

@@ -27,4 +27,12 @@ class Helpers
             file_put_contents($filename, $barcode);
         }
     }
+
+    public static function hide($string) {
+        $length = strlen($string);
+        $hidden = substr($string, 0, 1);
+        $hidden .= str_repeat('*', $length - 2);
+        $hidden .= substr($string, $length - 1, 1);
+        return $hidden;
+    }
 }
