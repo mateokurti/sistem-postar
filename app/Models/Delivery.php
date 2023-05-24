@@ -33,7 +33,13 @@ class Delivery extends _BaseModel
                 FROM tracking_history
                 GROUP BY delivery_id
             ) t3 ON t2.delivery_id = t3.delivery_id AND t2.created_at = t3.latest_created_at
-            WHERE t1.holder_id = ? OR t2.status = 'created' OR t2.status = 'accepted' OR t2.status = 'in_post_office'
+            WHERE t1.holder_id = ? OR (
+                (t1.office_id = (
+                    SELECT office_id FROM employees WHERE identity_id = (
+                        SELECT identity_id FROM package_holders WHERE id = ?
+                    )
+                ) OR t1.office_id IS NULL
+            ) AND (t2.status = 'created' OR t2.status = 'accepted' OR t2.status = 'in_post_office'))
             ";
         } else if ($holderType == 'office') {
             $sql = "
@@ -51,7 +57,11 @@ class Delivery extends _BaseModel
         }
         
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$holderId]);
+        if ($holderType == 'courier') {
+            $stmt->execute([$holderId, $holderId]);
+        } else {
+            $stmt->execute([$holderId]);
+        }
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
