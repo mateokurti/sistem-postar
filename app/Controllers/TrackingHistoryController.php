@@ -28,7 +28,7 @@ class TrackingHistoryController extends _BaseController
 
     public function tracking()
     {
-        if (isset( $_GET['tracking_number'])) {
+        if (isset( $_GET['tracking_number']) && strlen($_GET['tracking_number']) == 10 && is_numeric($_GET['tracking_number'])) {
             $identity = null;
             
             if (isset($_SESSION['identity_id'])) {
@@ -36,6 +36,10 @@ class TrackingHistoryController extends _BaseController
             }
 
             $delivery = $this->delivery->getByTrackingNumber($_GET['tracking_number']);
+            if (!$delivery) {
+                $this->view('tracking/index', ['error' => 'Delivery not found']);
+                return;
+            }
             $this->deliveryController->advancedDelivery($delivery, $identity);
 
             $this->view('tracking/index', ['identity' => $identity, 'delivery' => $delivery]);
