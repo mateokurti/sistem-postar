@@ -66,10 +66,10 @@ class Delivery extends _BaseModel
     public function create($data)
     {
         $data = $this->sanitizeArray($data);
-        $sql = "INSERT INTO {$this->table} (sender_id, recipient_id, holder_id, notes, address_id) VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO {$this->table} (sender_id, recipient_id, holder_id, notes, address_id, office_id) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
-            $data['sender_id'], $data['recipient_id'], $data['holder_id'], $data['notes'], $data['address_id']
+            $data['sender_id'], $data['recipient_id'], $data['holder_id'], $data['notes'], $data['address_id'], $data['office_id']
         ]);
         $delivery = $this->getById($this->pdo->lastInsertId());
         $tracking_number = str_pad($delivery['id'], 10, "0", STR_PAD_LEFT);

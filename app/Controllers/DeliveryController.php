@@ -256,7 +256,22 @@ class DeliveryController extends _BaseController
         } 
 
         $identityId = $_SESSION['identity_id'];
-        $data['responsible_identity'] = $identityId; 
+        $data['responsible_identity'] = $identityId;
+        $sender_address = $this->address->getByIdentityId($identityId);
+
+        $offices = $this->office->getAll();
+        foreach ($offices as &$office) {
+            $office['address'] = $this->address->getById($office['address_id']);
+            
+            $office['distance'] = Helpers::calculateDistance(
+                $sender_address['street'] . ' ' . $sender_address['city'],
+                $office['address']['street'] . ' ' . $office['address']['city'],
+            );
+        }
+        usort($offices, function($a, $b) {
+            return $a['distance'] <=> $b['distance'];
+        });
+        $office = $offices[0];
 
         $data = $this->delivery->create([
             'sender_id' => $identityId,
@@ -264,6 +279,7 @@ class DeliveryController extends _BaseController
             'holder_id' => $identityId,
             'notes' => $data['notes'],
             'address_id' => $recipient_address['id'],
+            'office_id' => $office['id'],
         ]);
 
         $this->tracking_history->create([

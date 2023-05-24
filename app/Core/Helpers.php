@@ -5,6 +5,8 @@ namespace App\Core;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter; 
 use Picqer\Barcode\BarcodeGeneratorPNG;
+use HTTP_Request2;
+use HTTP_Request2_Exception;
 
 class Helpers
 {
@@ -34,5 +36,28 @@ class Helpers
         $hidden .= str_repeat('*', $length - 2);
         $hidden .= substr($string, $length - 1, 1);
         return $hidden;
+    }
+
+    public static function calculateDistance($startAddress, $endAddress) {
+        $apiKey = $_ENV['GOOGLE_API_KEY'];
+
+        $request = new HTTP_Request2();
+        $request->setUrl("https://maps.googleapis.com/maps/api/directions/json?origin=$startAddress&destination=$endAddress&alternatives=false&sensor=false&key=$apiKey");
+        $request->setMethod(HTTP_Request2::METHOD_GET);
+        $request->setConfig(array('follow_redirects' => TRUE));
+        try {
+            $response = $request->send();
+            if ($response->getStatus() == 200) {
+                $data = json_decode($response->getBody(), true);
+                return $data['routes'][0]['legs'][0]['distance']['value'] ?? 999999999;
+            }
+            else {
+                echo 'Unexpected HTTP status: ' . $response->getStatus() . ' ' .
+                $response->getReasonPhrase();
+            }
+        }
+        catch(HTTP_Request2_Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
     }
 }

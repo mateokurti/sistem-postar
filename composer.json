@@ -33,6 +33,7 @@
         "google/apiclient": "^2.0",
         "phpmailer/phpmailer": "^6.8",
         "endroid/qr-code": "^4.8",
-        "picqer/php-barcode-generator": "^2.2"
+        "picqer/php-barcode-generator": "^2.2",
+        "pear/http_request2": "^2.5"
     }
 }

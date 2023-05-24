@@ -40,6 +40,12 @@ class _BaseModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function getAll() {
+        $stmt = $this->pdo->prepare("SELECT * FROM {$this->table}");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getAllBy($column, $value)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM {$this->table} WHERE {$column} = ?");
