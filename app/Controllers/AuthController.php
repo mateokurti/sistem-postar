@@ -297,11 +297,11 @@ class AuthController extends _BaseController
 
         $this->identity->update($data);
 
-        if (isset($new_password)) {
+        if (isset($new_password) && !empty($new_password)) {
             $hashedPassword = password_hash($new_password, PASSWORD_DEFAULT);
             $this->identity->setPassword($email, $hashedPassword);
         }
 
-        $this->redirect('/dashboard');
+        $this->redirect('/deliveries');
     }
 }
