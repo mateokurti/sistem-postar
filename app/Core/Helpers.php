@@ -18,6 +18,7 @@ class Helpers
         if (!file_exists($filename)) {
           $writer->write($qr)->saveToFile($filename);
         }
+        return $filename;
       }
       
     public static function createBarcode($name, $content) {
@@ -28,6 +29,7 @@ class Helpers
         if (!file_exists($filename)) {
             file_put_contents($filename, $barcode);
         }
+        return $filename;
     }
 
     public static function hide($string) {

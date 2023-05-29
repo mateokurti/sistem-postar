@@ -290,7 +290,7 @@ class DeliveryController extends _BaseController
             'created_at' => date('Y-m-d H:i:s'),
         ]);
 
-        Helpers::createQRCode($data['tracking_number'], "https://projects.mateokurti.com/fshn/sistem-postar/tracking?tracking_number=" . $data['tracking_number']);
+        Helpers::createQRCode($data['tracking_number'], $_ENV['BASE_URL'] . "/tracking?tracking_number=" . $data['tracking_number']);
         Helpers::createBarcode($data['tracking_number'], $data['tracking_number']);
 
         $this->redirect('/deliveries');

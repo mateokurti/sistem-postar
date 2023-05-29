@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use PDO;
 use Google_Client;
+use App\Models\Address;
 use Google_Service_Oauth2;
 use App\Models\Identity;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -12,12 +13,14 @@ use PHPMailer\PHPMailer\Exception;
 class AuthController extends _BaseController
 {
     protected $identity;
+    protected $address;
     protected $google_client;
 
     public function __construct(PDO $pdo)
     {
         parent::__construct($pdo);
         $this->identity = new Identity($pdo);
+        $this->address = new Address($pdo);
         $this->google_client = new Google_Client();
 
         $this->google_client->setClientId($_ENV['GOOGLE_CLIENT_ID']);
@@ -39,6 +42,36 @@ class AuthController extends _BaseController
     public function showLogInForm()
     {
         $this->view('auth/index', ['googleAuthUrl' => $this->google_client->createAuthUrl()]);
+    }
+
+    public function getUser()
+    {
+        $email = $_GET['email'];
+
+        if (empty($email)) {
+            $this->json(['error' => 'Please enter an email.']);
+            return;
+        }
+
+        $identity = $this->identity->getByEmail($email);
+
+        if (!$identity) {
+            $this->json(['error' => 'No user found with that email.']);
+            return;
+        }
+
+        $address = $this->address->getByIdentityId($identity['id']);
+
+        $this->json([
+            'found' => true,
+            'first_name' => $identity['first_name'],
+            'last_name' => $identity['last_name'],
+            'address' => [
+                'street' => $address['street'],
+                'city' => $address['city'],
+                'zip' => $address['zip']
+            ]
+        ]);
     }
 
     public function googleLogIn()
@@ -184,7 +217,7 @@ class AuthController extends _BaseController
 
         // Server settings
         // Enable verbose debug output
-        $mail->SMTPDebug = 2;
+        $mail->SMTPDebug = 0;
         $mail->isSMTP();
         $mail->Host = $_ENV['SMTP_HOST'];
         $mail->Port = $_ENV['SMTP_PORT'];
@@ -193,15 +226,15 @@ class AuthController extends _BaseController
         $mail->Username = $_ENV['SMTP_USERNAME'];
         $mail->Password = $_ENV['SMTP_PASSWORD'];
 
-        //Recipients
+        // Recipients
         $mail->setFrom($_ENV['SMTP_USERNAME']);
         $mail->addAddress($email);
 
         // Content
         $mail->isHTML(true);
         $mail->Subject = 'Test Email';
-        $reset_link = sprintf('http://localhost:8000/auth/reset-password/confirm?email=%s&code=%s', $email, $code);
-        $mail->Body = "Reset Password: " . $reset_link;
+        $reset_link = sprintf('%s/auth/reset-password/confirm?email=%s&code=%s', $_ENV['BASE_URL'], $email, $code);
+        $mail->Body = "Reset Password: <a href=\"" . $reset_link . "\">" . $reset_link . "</a>";
 
         $mail->send();
 

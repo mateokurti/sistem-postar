@@ -19,11 +19,11 @@
                           <div class="flex justify-between">
                               <div class="w-1/2 mr-1">
                                   <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Name</label>
-                                  <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" type="text" name="recipient_first_name" placeholder="Filan" required>
+                                  <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" type="text" id="recipient_first_name" name="recipient_first_name" placeholder="Filan" required>
                               </div>
                               <div class="w-1/2 ml-1">
                                   <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last Name</label>
-                                  <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" type="text" name="recipient_last_name" placeholder="Fisteku" required>
+                                  <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" type="text" id="recipient_last_name" name="recipient_last_name" placeholder="Fisteku" required>
                               </div>
                           </div>
                       </div>
@@ -106,7 +106,7 @@
                               </div>
                               <div class="w-1/2 ml-1">
                                   <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kodi Postar</label>
-                                  <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" type="number" name="recipient_address_zip_code" placeholder="1003" required>
+                                  <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" type="number" id="recipient_address_zip_code" name="recipient_address_zip_code" placeholder="1003" required>
                               </div>
                           </div>
                       </div>
@@ -126,4 +126,57 @@
     </div>
 </div>
 
+<script>
+    // when the user types into the email field event
+    document.getElementById('recipient_email').addEventListener('input', function(evt) {
+        // get the email field value
+        var email = evt.target.value;
+        console.log(email);
+        
+        // send a request to get the user's name
+        fetch('/auth/identity/?email=' + email)
+            .then(response => response.json())
+            .then(data => {
+                // if the user was found
+                if (data.found) {
+                    console.log(data);
+                    console.log(data.address.zip);
+                    document.getElementById('recipient_first_name').value = data.first_name;
+                    document.getElementById('recipient_last_name').value = data.last_name;
 
+                    document.getElementById('recipient_address_street').value = data.address.street;
+                    var city = document.getElementById('recipient_address_city');
+                    for (var i = 0; i < city.options.length; i++) {
+                        if (city.options[i].value == data.address.city) {
+                            city.selectedIndex = i;
+                            break;
+                        }
+                    }
+                    document.getElementById('recipient_address_zip_code').value = data.address.zip;
+
+                    // set fields as readonly
+                    document.getElementById('recipient_first_name').readOnly = true;
+                    document.getElementById('recipient_last_name').readOnly = true;
+
+                    document.getElementById('recipient_address_street').readOnly = true;
+                    document.getElementById('recipient_address_city').readOnly = true;
+                    document.getElementById('recipient_address_zip_code').readOnly = true;
+                } else {
+                    document.getElementById('recipient_first_name').readOnly = false;
+                    document.getElementById('recipient_last_name').readOnly = false;
+
+                    document.getElementById('recipient_address_street').readOnly = false;
+                    document.getElementById('recipient_address_city').readOnly = false;
+                    document.getElementById('recipient_address_zip_code').readOnly = false;
+
+                    document.getElementById('recipient_first_name').value = "";
+                    document.getElementById('recipient_last_name').value = "";
+
+                    document.getElementById('recipient_address_street').value = "";
+                    document.getElementById('recipient_address_city').value = "";
+                    document.getElementById('recipient_address_zip_code').value = "";
+                }
+            });
+    });
+
+</script>

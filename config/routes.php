@@ -39,6 +39,7 @@ $router->get('logout', function () {
     header('Location: /auth/logout');
 }, [GuestMiddleware::class]);
 
+$router->get('auth/identity', 'AuthController@getUser', [AuthMiddleware::class]);
 
 $router->get('dashboard', 'DashboardController@index', [AuthMiddleware::class]);
 $router->get('deliveries', 'DeliveryController@index', [AuthMiddleware::class]);
