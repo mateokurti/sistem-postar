@@ -10,6 +10,8 @@ use App\Models\Employee;
 use App\Models\Address;
 use App\Models\Office;
 use App\Models\TrackingHistory;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 use PDO;
 
 class DeliveryController extends _BaseController
@@ -135,6 +137,7 @@ class DeliveryController extends _BaseController
     public function index()
     {
         $identity = $this->identity->getById($_SESSION['identity_id']);
+        $identity['address'] = $this->address->getByIdentityId($identity['id']);
 
         switch ($identity['identity_type']) {
             case 'admin':
@@ -232,13 +235,48 @@ class DeliveryController extends _BaseController
         $recipient = $this->identity->getByEmail($_POST['recipient_email']);
         
         if (!$recipient) {
+            $password = Helpers::generateRandomString(8);
             $recipient = $this->identity->create([
                 'first_name' => $_POST['recipient_first_name'],
                 'last_name' => $_POST['recipient_last_name'],
                 'email' => $_POST['recipient_email'],
+                'password' => password_hash($password, PASSWORD_DEFAULT),
                 'identity_type' => 'user',
                 'status' => 0,
             ]);
+
+            $mail = new PHPMailer(true);
+
+            // Server settings
+            // Enable verbose debug output
+            $mail->SMTPDebug = 0;
+            $mail->isSMTP();
+            $mail->Host = $_ENV['SMTP_HOST'];
+            $mail->Port = $_ENV['SMTP_PORT'];
+            $mail->SMTPSecure = 'ssl';
+            $mail->SMTPAuth = true;
+            $mail->Username = $_ENV['SMTP_USERNAME'];
+            $mail->Password = $_ENV['SMTP_PASSWORD'];
+
+            // Recipients
+            $mail->setFrom($_ENV['SMTP_USERNAME']);
+            $mail->addAddress($recipient['email']);
+
+            $mail->isHTML(true);
+            $mail->Subject = 'PostaFSHN - Nje dergese e re eshte krijuar per ju.';
+            $mail->Body = sprintf("
+            Pershendetje %s,
+            <br><br>
+            Ju keni marre nje dergese te re. Ju lutem te logoheni në sistem në linkun e meposhtem me kredencialet e perkohshme:
+            </a href=\"%s/auth/login/\">%s/auth/login/</a>
+            <br><br>
+            Email: %s<br>
+            Fjalekalimi: %s
+            <br><br>
+            Pasi te logoheni, ju lutem te ndryshoni fjalekalimin tuaj.
+            ", $recipient['first_name'], $_ENV['BASE_URL'], $_ENV['BASE_URL'], $recipient['email'], $password);
+
+            $mail->send();
         }
 
         $recipient_address = $this->address->getByIdentityId($recipient['id']);

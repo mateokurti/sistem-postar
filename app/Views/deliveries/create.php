@@ -7,11 +7,11 @@
                 <span class="sr-only">Close modal</span>
             </button>
             <div class="px-6 py-6 lg:px-8">
-                <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Krijo Dërgesë</h3>
+                <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Krijo Dergese</h3>
                     <form class="max-w-lg mx-auto" action="/deliveries/create" method="POST">
                       <div class="mt-4">
                           <div class="flex justify-between">
-                              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Emaili i Marrësit</label>
+                              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Emaili i Marresit</label>
                           </div>
                           <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" id="recipient_email" name="recipient_email" type="email" placeholder="filan.fisteku@shembull.al" required>
                       </div>
@@ -34,7 +34,7 @@
                           <div class="flex justify-between">
                               <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Adresa</label>
                           </div>
-                          <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" id="recipient_address_street" name="recipient_address_street" type="text" placeholder="Rr. Sami Frashëri, Nd. 15, H. 1, Ap. 12" required>
+                          <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" id="recipient_address_street" name="recipient_address_street" type="text" placeholder="Rr. Sami Frasheri, Nd. 15, H. 1, Ap. 12" required>
                       </div>
 
                       <div class="mt-4">
@@ -44,62 +44,62 @@
                                   <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" id="recipient_address_city" name="recipient_address_city" required>
                                       <option value="" disabled selected>Zgjidh Qytetin</option>
                                       <option value="Tirana">Tirana</option>
-                                      <option value="Durrës">Durrës</option>
-                                      <option value="Vlorë">Vlorë</option>
-                                      <option value="Kamëz">Kamëz</option>
+                                      <option value="Durres">Durres</option>
+                                      <option value="Vlore">Vlore</option>
+                                      <option value="Kamez">Kamez</option>
                                       <option value="Fier">Fier</option>
-                                      <option value="Shkodër">Shkodër</option>
+                                      <option value="Shkoder">Shkoder</option>
                                       <option value="Elbasan">Elbasan</option>
-                                      <option value="Korçë">Korçë</option>
-                                      <option value="Sarandë">Sarandë</option>
+                                      <option value="Korçe">Korçe</option>
+                                      <option value="Sarande">Sarande</option>
                                       <option value="Berat">Berat</option>
-                                      <option value="Lushnjë">Lushnjë</option>
-                                      <option value="Kavajë">Kavajë</option>
-                                      <option value="Gjirokastër">Gjirokastër</option>
+                                      <option value="Lushnje">Lushnje</option>
+                                      <option value="Kavaje">Kavaje</option>
+                                      <option value="Gjirokaster">Gjirokaster</option>
                                       <option value="Pogradec">Pogradec</option>
-                                      <option value="Fushë-Krujë">Fushë-Krujë</option>
+                                      <option value="Fushe-Kruje">Fushe-Kruje</option>
                                       <option value="Laç">Laç</option>
-                                      <option value="Kukës">Kukës</option>
+                                      <option value="Kukes">Kukes</option>
                                       <option value="Sukth">Sukth</option>
-                                      <option value="Lezhë">Lezhë</option>
+                                      <option value="Lezhe">Lezhe</option>
                                       <option value="Patos">Patos</option>
                                       <option value="Peshkopi">Peshkopi</option>
-                                      <option value="Librazhd-Qendër">Librazhd-Qendër</option>
-                                      <option value="Kuçovë">Kuçovë</option>
-                                      <option value="Krujë">Krujë</option>
-                                      <option value="Vorë">Vorë</option>
+                                      <option value="Librazhd-Qender">Librazhd-Qender</option>
+                                      <option value="Kuçove">Kuçove</option>
+                                      <option value="Kruje">Kruje</option>
+                                      <option value="Vore">Vore</option>
                                       <option value="Burrel">Burrel</option>
                                       <option value="Libonik">Libonik</option>
-                                      <option value="Rrëshen">Rrëshen</option>
+                                      <option value="Rreshen">Rreshen</option>
                                       <option value="Belsh">Belsh</option>
-                                      <option value="Divjakë">Divjakë</option>
+                                      <option value="Divjake">Divjake</option>
                                       <option value="Gramsh">Gramsh</option>
                                       <option value="Mamurras">Mamurras</option>
-                                      <option value="Bulqizë">Bulqizë</option>
-                                      <option value="Vau i Dejës">Vau i Dejës</option>
-                                      <option value="Shëngjin">Shëngjin</option>
+                                      <option value="Bulqize">Bulqize</option>
+                                      <option value="Vau i Dejes">Vau i Dejes</option>
+                                      <option value="Shengjin">Shengjin</option>
                                       <option value="Ballsh">Ballsh</option>
                                       <option value="Shijak">Shijak</option>
                                       <option value="Bilisht">Bilisht</option>
-                                      <option value="Rrogozhinë">Rrogozhinë</option>
+                                      <option value="Rrogozhine">Rrogozhine</option>
                                       <option value="Librazhd">Librazhd</option>
-                                      <option value="Cërrik">Cërrik</option>
+                                      <option value="Cerrik">Cerrik</option>
                                       <option value="Roskovec">Roskovec</option>
                                       <option value="Peqin">Peqin</option>
-                                      <option value="Krumë">Krumë</option>
-                                      <option value="Përmet">Përmet</option>
+                                      <option value="Krume">Krume</option>
+                                      <option value="Permet">Permet</option>
                                       <option value="Prrenjas">Prrenjas</option>
-                                      <option value="Delvinë">Delvinë</option>
+                                      <option value="Delvine">Delvine</option>
                                       <option value="Bajram Curri">Bajram Curri</option>
                                       <option value="Dimal">Dimal</option>
                                       <option value="Rubik">Rubik</option>
-                                      <option value="Tepelenë">Tepelenë</option>
+                                      <option value="Tepelene">Tepelene</option>
                                       <option value="Poliçan">Poliçan</option>
                                       <option value="Maliq">Maliq</option>
-                                      <option value="Çorovodë">Çorovodë</option>
-                                      <option value="Ersekë">Ersekë</option>
+                                      <option value="Çorovode">Çorovode</option>
+                                      <option value="Erseke">Erseke</option>
                                       <option value="Koplik">Koplik</option>
-                                      <option value="Pukë">Pukë</option>
+                                      <option value="Puke">Puke</option>
                                       <option value="Lazarat">Lazarat</option>
                                       <option value="Memaliaj">Memaliaj</option>
                                   </select>
@@ -113,12 +113,12 @@
 
                       <div class="mt-4">
                           <div class="flex justify-between">
-                              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Shënime</label>
+                              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Shenime</label>
                           </div>
-                          <textarea class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" id="notes" name="notes" placeholder="Shënime"></textarea>
+                          <textarea class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" id="notes" name="notes" placeholder="Shenime"></textarea>
                       </div>
                       <div class="mt-8">
-                          <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-800 dark:hover:bg-gray-900 dark:focus:ring-gray-900">Dërgo</button>
+                          <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-800 dark:hover:bg-gray-900 dark:focus:ring-gray-900">Dergo</button>
                       </div>
                     </form>
                 </div>

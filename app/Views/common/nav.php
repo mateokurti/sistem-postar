@@ -110,6 +110,91 @@
                           <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" id="password" name="password" type="password" placeholder="••••••••••" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="The password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.">
                       </div>
 
+                      <div class="mt-4 flex items-center justify-between">
+                          <span class="border-b w-full"></span>
+                      </div>
+
+                      <div class="mt-4">
+                          <div class="flex justify-between">
+                              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Adresa</label>
+                          </div>
+                          <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" id="street" name="street" type="text" placeholder="Rr. Sami Frasheri, Nd. 15, H. 1, Ap. 12" value="<?= isset($identity['address']) && isset($identity['address']['street']) ? $identity['address']['street'] : "" ?>" required>
+                      </div>
+
+                      <div class="mt-4">
+                          <div class="flex justify-between">
+                              <div class="w-1/2 mr-1">
+                                  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Qyteti</label>
+                                  <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" id="city" name="city" required>
+                                      <option value="" disabled selected>Zgjidh Qytetin</option>
+                                      <option value="Tirana">Tirana</option>
+                                      <option value="Durres">Durres</option>
+                                      <option value="Vlore">Vlore</option>
+                                      <option value="Kamez">Kamez</option>
+                                      <option value="Fier">Fier</option>
+                                      <option value="Shkoder">Shkoder</option>
+                                      <option value="Elbasan">Elbasan</option>
+                                      <option value="Korçe">Korçe</option>
+                                      <option value="Sarande">Sarande</option>
+                                      <option value="Berat">Berat</option>
+                                      <option value="Lushnje">Lushnje</option>
+                                      <option value="Kavaje">Kavaje</option>
+                                      <option value="Gjirokaster">Gjirokaster</option>
+                                      <option value="Pogradec">Pogradec</option>
+                                      <option value="Fushe-Kruje">Fushe-Kruje</option>
+                                      <option value="Laç">Laç</option>
+                                      <option value="Kukes">Kukes</option>
+                                      <option value="Sukth">Sukth</option>
+                                      <option value="Lezhe">Lezhe</option>
+                                      <option value="Patos">Patos</option>
+                                      <option value="Peshkopi">Peshkopi</option>
+                                      <option value="Librazhd-Qender">Librazhd-Qender</option>
+                                      <option value="Kuçove">Kuçove</option>
+                                      <option value="Kruje">Kruje</option>
+                                      <option value="Vore">Vore</option>
+                                      <option value="Burrel">Burrel</option>
+                                      <option value="Libonik">Libonik</option>
+                                      <option value="Rreshen">Rreshen</option>
+                                      <option value="Belsh">Belsh</option>
+                                      <option value="Divjake">Divjake</option>
+                                      <option value="Gramsh">Gramsh</option>
+                                      <option value="Mamurras">Mamurras</option>
+                                      <option value="Bulqize">Bulqize</option>
+                                      <option value="Vau i Dejes">Vau i Dejes</option>
+                                      <option value="Shengjin">Shengjin</option>
+                                      <option value="Ballsh">Ballsh</option>
+                                      <option value="Shijak">Shijak</option>
+                                      <option value="Bilisht">Bilisht</option>
+                                      <option value="Rrogozhine">Rrogozhine</option>
+                                      <option value="Librazhd">Librazhd</option>
+                                      <option value="Cerrik">Cerrik</option>
+                                      <option value="Roskovec">Roskovec</option>
+                                      <option value="Peqin">Peqin</option>
+                                      <option value="Krume">Krume</option>
+                                      <option value="Permet">Permet</option>
+                                      <option value="Prrenjas">Prrenjas</option>
+                                      <option value="Delvine">Delvine</option>
+                                      <option value="Bajram Curri">Bajram Curri</option>
+                                      <option value="Dimal">Dimal</option>
+                                      <option value="Rubik">Rubik</option>
+                                      <option value="Tepelene">Tepelene</option>
+                                      <option value="Poliçan">Poliçan</option>
+                                      <option value="Maliq">Maliq</option>
+                                      <option value="Çorovode">Çorovode</option>
+                                      <option value="Erseke">Erseke</option>
+                                      <option value="Koplik">Koplik</option>
+                                      <option value="Puke">Puke</option>
+                                      <option value="Lazarat">Lazarat</option>
+                                      <option value="Memaliaj">Memaliaj</option>
+                                  </select>
+                              </div>
+                              <div class="w-1/2 ml-1">
+                                  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kodi Postar</label>
+                                  <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" type="number" id="zip" name="zip" placeholder="1003" value="<?= isset($identity['address']) && isset($identity['address']['zip']) ? $identity['address']['zip'] : "" ?>" required>
+                              </div>
+                          </div>
+                      </div>
+
                       <div class="mt-8">
                           <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-800 dark:hover:bg-gray-900 dark:focus:ring-gray-900">Ndrysho</button>
                       </div>
@@ -120,3 +205,12 @@
 </div>
 
 
+<script>
+  // automatically select the city by value
+  var city = document.getElementById("city");
+  var cityValue = "<?= isset($identity['address']) && isset($identity['address']['city']) ? $identity['address']['city'] : "" ?>";
+  for (var i = 0; i < city.options.length; ++i) {
+    if (city.options[i].value === cityValue)
+      city.selectedIndex = i;
+  }
+</script>

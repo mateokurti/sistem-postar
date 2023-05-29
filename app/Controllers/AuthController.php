@@ -288,6 +288,19 @@ class AuthController extends _BaseController
         $last_name = $_POST['last_name'];
         $new_password = $_POST['password'];
 
+        $street = $_POST['street'];
+        $city = $_POST['city'];
+        $zip = $_POST['zip'];
+
+        if (isset($street) && !empty($street) && isset($city) && !empty($city) && isset($zip) && !empty($zip)) {
+            $this->address->updateByIdentityId([
+                'identity_id' => $id,
+                'street' => $street,
+                'city' => $city,
+                'zip' => $zip
+            ]);
+        }
+
         $data = [
             'first_name' => $first_name,
             'last_name' => $last_name,

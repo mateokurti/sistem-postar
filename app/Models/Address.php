@@ -22,4 +22,20 @@ class Address extends _BaseModel
         $stmt->execute([$data['identity_id'], $data['street'], $data['city'], $data['zip']]);
         return $this->getById($this->pdo->lastInsertId());
     }
+
+    public function updateByIdentityId($data)
+    {
+        $data = $this->sanitizeArray($data);
+
+        $address = $this->getByIdentityId($data['identity_id']);
+
+        if (!$address) {
+            return $this->create($data);
+        }
+
+        $sql = "UPDATE {$this->table} SET street = ?, city = ?, zip = ? WHERE identity_id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$data['street'], $data['city'], $data['zip'], $data['identity_id']]);
+        return $this->getByIdentityId($data['identity_id']);
+    }
 }

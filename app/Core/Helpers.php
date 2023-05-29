@@ -62,4 +62,13 @@ class Helpers
             echo 'Error: ' . $e->getMessage();
         }
     }
+
+    public static function generateRandomString($numOfCharacters) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:<>?~';
+        $randomString = '';
+        for ($i = 0; $i < $numOfCharacters; $i++) {
+            $randomString .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        return $randomString;
+    }
 }
